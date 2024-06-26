@@ -1,0 +1,5 @@
+# all of the duckdb data
+data*
+
+# place for my own testing and adhoc work
+adhoc_analysis*
