@@ -3,3 +3,5 @@ data*
 
 # place for my own testing and adhoc work
 adhoc_analysis*
+
+__pycache__
