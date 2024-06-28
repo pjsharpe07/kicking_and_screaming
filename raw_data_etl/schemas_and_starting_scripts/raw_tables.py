@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS raw.game_xg (
 
 stadium_table = """
 CREATE TABLE IF NOT EXISTS raw.stadiums (
-	stadium_id VARCHAR,
+	stadium_id VARCHAR PRIMARY KEY,
 	stadium_name VARCHAR,
 	year_built INTEGER,
 	street VARCHAR,
@@ -85,5 +85,4 @@ CREATE TABLE IF NOT EXISTS raw.stadiums (
 	field_y INTEGER,
 	competition VARCHAR,
 )
-
 """
