@@ -21,6 +21,81 @@ CREATE TABLE IF NOT EXISTS raw.team_conferences (
 )
 """
 
+team_goals_added_table = """
+CREATE TABLE IF NOT EXISTS raw.team_goals_added (
+	team_id VARCHAR,
+    minutes INTEGER,
+    data STRUCT(
+    action_type VARCHAR, 
+    num_actions_for INTEGER, 
+    goals_added_for  REAL,
+    num_actions_against INTEGER, 
+	goals_added_against REAL)
+)
+"""
+
+team_salaries_table = """
+CREATE TABLE IF NOT EXISTS raw.team_salaries (
+	team_id VARCHAR,
+	season_name INTEGER,
+	count_players INTEGER,
+	total_guaranteed_compensation REAL,
+	avg_guaranteed_compensation REAL,
+	median_guaranteed_compensation REAL,
+	std_dev_guaranteed_compensation REAL
+)
+"""
+
+team_xg_table = """
+CREATE TABLE IF NOT EXISTS raw.team_xg (
+	team_id VARCHAR PRIMARY KEY,
+	count_games INTEGER,
+	shots_for INTEGER,
+	shots_against INTEGER,
+	goals_for INTEGER,
+	goals_against INTEGER,
+	goal_difference INTEGER,
+	xgoals_for REAL,
+	xgoals_against REAL,
+	xgoal_difference REAL,
+	goal_difference_minus_xgoal_difference REAL,
+	points INTEGER,
+	xpoints REAL,
+)
+"""
+
+team_xpass_table = """
+CREATE TABLE IF NOT EXISTS raw.team_xpass (
+	team_id VARCHAR,
+	count_games INTEGER,
+	attempted_passes_for INTEGER,
+	pass_completion_percentage_for REAL,
+	xpass_completion_percentage_for REAL,
+	passes_completed_over_expected_for REAL,
+	passes_completed_over_expected_p100_for REAL,
+	avg_vertical_distance_for REAL,
+	attempted_passes_against INTEGER,
+	pass_completion_percentage_against REAL,
+	xpass_completion_percentage_against REAL,
+	passes_completed_over_expected_against REAL,
+	passes_completed_over_expected_p100_against REAL,
+	avg_vertical_distance_against REAL,
+	passes_completed_over_expected_difference REAL,
+	avg_vertical_distance_differenc REAL
+)
+"""
+
+# not really sure where to put manager? Doing it here I guess
+
+manager_table = """
+CREATE TABLE IF NOT EXISTS raw.managers (
+	manager_id VARCHAR,
+	manager_name VARCHAR,
+	nationality VARCHAR,
+	competition VARCHAR
+)
+"""
+
 ########## game/stadium data data ###########
 
 
