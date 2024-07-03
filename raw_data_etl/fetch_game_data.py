@@ -1,7 +1,7 @@
 import duckdb
 from itscalledsoccer.client import AmericanSoccerAnalysis
 import os
-from schemas_and_starting_scripts.raw_tables import (
+from schemas_and_starting_scripts.raw_games_tables import (
     game_table,
     game_xg_table,
     stadium_table,

@@ -26,11 +26,11 @@ CREATE TABLE IF NOT EXISTS raw.team_goals_added (
 	team_id VARCHAR,
     minutes INTEGER,
     data STRUCT(
-    action_type VARCHAR, 
-    num_actions_for INTEGER, 
-    goals_added_for  REAL,
-    num_actions_against INTEGER, 
-	goals_added_against REAL)
+		action_type VARCHAR, 
+		num_actions_for INTEGER, 
+		goals_added_for  REAL,
+		num_actions_against INTEGER, 
+		goals_added_against REAL)
 )
 """
 

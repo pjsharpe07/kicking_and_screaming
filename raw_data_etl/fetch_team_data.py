@@ -2,7 +2,7 @@ import duckdb
 from itscalledsoccer.client import AmericanSoccerAnalysis
 from pandas import DataFrame
 import os
-from schemas_and_starting_scripts.raw_tables import (
+from schemas_and_starting_scripts.raw_teams_tables import (
     teams_table,
     team_conference_table,
     team_goals_added_table,
