@@ -1,0 +1,31 @@
+
+name: 'kicking_and_screaming'
+version: '1.0.0'
+profile: 'kicking_and_screaming'
+
+#### where dbt should look for files
+model-paths: ["models"]
+# analysis-paths: ["analyses"]
+test-paths: ["tests"]
+# seed-paths: ["seeds"]
+macro-paths: ["macros"]
+# snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+
+# Configuring models
+
+# In this example config, we tell dbt to build all models in the example/
+models:
+  kicking_and_screaming:
+    raw:
+      +materialized: view
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    purty:
+      +materialized: table
+      +schema: purty

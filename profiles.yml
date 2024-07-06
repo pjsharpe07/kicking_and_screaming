@@ -1,0 +1,8 @@
+kicking_and_screaming:
+
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "./data/kicking_dev.db"
+      threads: 24

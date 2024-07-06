@@ -1,0 +1,52 @@
+
+version: 2
+
+sources:
+  - name: raw
+    description: "Each record is a 2024 mls game"
+    database: kicking_dev
+    # schema: raw # this is the same as 'name' above
+    tables:
+      - name: games
+        columns:
+          - name: game_id
+            description: "The primary key for this table"
+            data_tests:
+              - unique
+              - not_null
+
+          - name: home_team_id
+            description: "The id of the home team"
+            data_tests:
+              - not_null
+
+          - name: away_team_id
+            description: "The id of the away team"
+            data_tests:
+              - not_null
+
+          - name: home_score
+            description: "Final score for the home team"
+            data_tests:
+              - not_null
+
+          - name: away_score
+            description: "Final score for the away team"
+            data_tests:
+              - not_null
+
+      - name: teams
+        columns:
+          - name: team_id
+            description: "The primary key for teams"
+            data_tests:
+              - unique
+              - not_null
+
+      - name: team_conferences
+        columns:
+          - name: team_name
+            description: "The friendly team name"
+            data_test:
+              - unique
+              - not_null

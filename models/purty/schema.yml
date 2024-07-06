@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: games
+    description: "Game data aggregated for each team"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null

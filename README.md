@@ -1,5 +1,7 @@
 # kicking_and_screaming
 
+[![Run Black Formatting check](https://github.com/pjsharpe07/kicking_and_screaming/actions/workflows/run_formatting.yml/badge.svg?branch=main)](https://github.com/pjsharpe07/kicking_and_screaming/actions/workflows/run_formatting.yml)
+
 This is a repository that utilizes open MLS data provided by the American Soccer Analysis.
 
 Find out more about them [from their website](https://www.americansocceranalysis.com/)
@@ -11,8 +13,11 @@ As of writing, the code here will pull data from the opensource [itscalledsoccer
 
 It uses some different technologies:
 
-- [python](https://www.python.org/) for fetching and loading the data. The needed packages can be found in the [requirements.txt](./raw_data_etl/requirements.txt) file.
+- [python](https://www.python.org/) for fetching and loading the data. The needed packages can be found in the [requirements.txt](requirements.txt) file.
 - [duckdb](https://duckdb.org/) for the database.
+- [dbt](#)
+
+it goes raw -> intermediate -> purty
 
 
 There are [3 python scripts](./raw_data_etl/) that will load raw data into a duckdb database. You can run them in any order. Each one will create a directory called `data` if it doesn't exist where a database called `kicking_dev.db` will be created.

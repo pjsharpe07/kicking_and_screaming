@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: games_with_points
+    schema: intermediate
+    description: "Raw games data with points for home vs away team"
+    columns:
+      - name: game_id
+        data_tests:
+          - unique
+          - not_null
