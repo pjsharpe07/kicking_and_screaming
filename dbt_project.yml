@@ -18,7 +18,8 @@ clean-targets:         # directories to be removed by `dbt clean`
 
 # Configuring models
 
-# In this example config, we tell dbt to build all models in the example/
+# Note that this breaks the traditional use of the +schema function.
+# You can see the change in the `macros` folder
 models:
   kicking_and_screaming:
     raw:
