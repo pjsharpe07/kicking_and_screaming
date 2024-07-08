@@ -2,3 +2,4 @@ duckdb~=1.0
 itscalledsoccer~=1.2
 pandas~=2.0
 tqdm~=4.65
+dbt-duckdb~=1.8.1

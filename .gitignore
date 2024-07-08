@@ -5,3 +5,12 @@ data*
 adhoc_analysis*
 
 __pycache__
+
+# venv setup
+.venv
+
+# dbt things to ignore
+target/
+dbt_packages/
+logs/
+.user.yml

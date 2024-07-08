@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: standings
+    description: "Game data aggregated for each team"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: home_away_analysis
+    description: "Team data aggregated which includes home and away for teams"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
