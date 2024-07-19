@@ -78,7 +78,7 @@ game_xg_data_present = check_for_existing_data(
 # filter game ids if we already have it
 # note that if game_ids is null, then it will return ALL games
 
-game_xg_data = asa_client.get_game_xgoals(leagues="mls", season_name='2024')
+game_xg_data = asa_client.get_game_xgoals(leagues="mls", season_name="2024")
 
 if game_xg_data_present and len(game_xg_data) > 0:
 
