@@ -16,8 +16,8 @@ from utils import (
 # suppress warnings -- pandas deprecation warning
 # Remove once newer version of itscalledsoccer is released
 import warnings
-warnings.filterwarnings("ignore")
 
+warnings.filterwarnings("ignore")
 
 
 path_to_database = os.path.join(os.getcwd(), "data", "kicking_dev.db")

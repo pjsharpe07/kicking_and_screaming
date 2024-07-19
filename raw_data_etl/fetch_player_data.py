@@ -1,7 +1,11 @@
 import duckdb
 from itscalledsoccer.client import AmericanSoccerAnalysis
 import os
-from utils import check_for_existing_data, create_schema_if_not_exists, delete_matching_pkeys_stmt
+from utils import (
+    check_for_existing_data,
+    create_schema_if_not_exists,
+    delete_matching_pkeys_stmt,
+)
 from schemas_and_starting_scripts.raw_player_tables import (
     player_table,
     player_ga_table,
@@ -16,6 +20,7 @@ from tqdm import tqdm
 # suppress warnings -- pandas deprecation warning
 # Remove once newer version of itscalledsoccer is released
 import warnings
+
 warnings.filterwarnings("ignore")
 
 path_to_database = os.path.join(os.getcwd(), "data", "kicking_dev.db")
@@ -59,12 +64,12 @@ player_data = asa_client.get_players(leagues="mls")
 
 if player_data_present:
     num_matching_keys, delete_stmt = delete_matching_pkeys_stmt(
-        source_df = player_data,
-        target_table = "kicking_dev.raw.players",
-        primary_key_column="player_id"
+        source_df=player_data,
+        target_table="kicking_dev.raw.players",
+        primary_key_column="player_id",
     )
     cursor.sql(delete_stmt)
-    print(f"[player_etl] Deleted at least {num_matching_keys} from players table")    
+    print(f"[player_etl] Deleted at least {num_matching_keys} from players table")
 
 cursor.sql("INSERT INTO raw.players SELECT * FROM player_data")
 print(f"[player_etl] Inserted {len(player_data)} rows into players table")
@@ -106,7 +111,10 @@ for action_type in action_types:
 
     # now insert
     cursor.sql("INSERT INTO raw.player_goals_added SELECT * FROM player_ga_data")
-    print(f"[player_etl] Inserted {len(player_ga_data)} rows into player GA data for", action_type)
+    print(
+        f"[player_etl] Inserted {len(player_ga_data)} rows into player GA data for",
+        action_type,
+    )
 
 
 # player xg
@@ -150,7 +158,9 @@ player_salary_data_present = check_for_existing_data(
 
 if player_salary_data_present:
     # TODO -- fetch the max updated date from the table and filter to newer entries
-    print("TODO: player salary table merge logic here. Low priority since CY data is not present")
+    print(
+        "TODO: player salary table merge logic here. Low priority since CY data is not present"
+    )
 else:
     salary_data = asa_client.get_player_salaries(leagues="mls")
     cursor.sql("INSERT INTO raw.player_salaries SELECT * FROM salary_data")

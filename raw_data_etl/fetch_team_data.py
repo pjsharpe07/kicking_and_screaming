@@ -15,13 +15,14 @@ from utils import (
     check_for_existing_data,
     create_schema_if_not_exists,
     filter_values_from_df,
-    delete_matching_pkeys_stmt
+    delete_matching_pkeys_stmt,
 )
 from tqdm import tqdm
 
 # suppress warnings -- pandas deprecation warning
 # Remove once newer version of itscalledsoccer is released
 import warnings
+
 warnings.filterwarnings("ignore")
 
 
@@ -102,10 +103,10 @@ conf_data_present = check_for_existing_data(
 # filter out team conference data if it already exists
 if conf_data_present:
     conference_df = filter_values_from_df(
-        source_table = "kicking_dev.raw.team_conferences",
-        target_df = conference_df,
-        checking_column = "team_name",
-        cursor = cursor
+        source_table="kicking_dev.raw.team_conferences",
+        target_df=conference_df,
+        checking_column="team_name",
+        cursor=cursor,
     )
 
 cursor.sql("INSERT INTO raw.team_conferences SELECT * FROM conference_df")
@@ -127,10 +128,10 @@ team_data = asa_client.get_teams(leagues="mls")
 # only add new teams here
 if team_data_present:
     team_data = filter_values_from_df(
-        source_table = "kicking_dev.raw.teams",
-        target_df = team_data,
-        checking_column = "team_id",
-        cursor = cursor
+        source_table="kicking_dev.raw.teams",
+        target_df=team_data,
+        checking_column="team_id",
+        cursor=cursor,
     )
 
 cursor.sql("INSERT INTO raw.teams SELECT * FROM team_data")
@@ -197,7 +198,7 @@ team_xg_data_present = check_for_existing_data(
 )
 
 team_xg_data = asa_client.get_team_xgoals(leagues="mls", season_name="2024")
-    
+
 
 if team_xg_data_present and len(team_xg_data) > 0:
     cursor.sql("DELETE FROM kicking_dev.raw.team_xg")
@@ -214,7 +215,7 @@ team_xpass_data_present = check_for_existing_data(
 )
 
 team_xpass_data = asa_client.get_team_xpass(leagues="mls", season_name="2024")
-    
+
 
 if team_xpass_data_present and len(team_xpass_data) > 0:
     cursor.sql("DELETE FROM kicking_dev.raw.team_xpass")
@@ -233,15 +234,15 @@ manager_data_present = check_for_existing_data(
 manager_data = asa_client.get_managers(leagues="mls")
 
 if manager_data_present:
-    
+
     num_matching_keys, delete_stmt = delete_matching_pkeys_stmt(
-        source_df = manager_data,
-        target_table = "kicking_dev.raw.managers",
-        primary_key_column="manager_id"
+        source_df=manager_data,
+        target_table="kicking_dev.raw.managers",
+        primary_key_column="manager_id",
     )
     cursor.sql(delete_stmt)
     print(f"[teams_etl] Deleted at least {num_matching_keys} from managers table")
-    
+
 
 cursor.sql("INSERT INTO raw.managers SELECT * FROM manager_data")
 print(f"[teams_etl] Inserted {len(manager_data)} rows into managers table")

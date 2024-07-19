@@ -89,9 +89,7 @@ def filter_values_from_df(
 
 
 def delete_matching_pkeys_stmt(
-    source_df: DataFrame, 
-    target_table: str, 
-    primary_key_column: str
+    source_df: DataFrame, target_table: str, primary_key_column: str
 ) -> tuple:
     """
     Returns a delete statement from the target table
@@ -99,8 +97,8 @@ def delete_matching_pkeys_stmt(
     """
 
     unique_values = source_df[primary_key_column].unique()
-    in_clause =  "', '".join(unique_values)
-    
+    in_clause = "', '".join(unique_values)
+
     delete_stmt = f"""
     DELETE FROM {target_table}
     WHERE {primary_key_column} IN ('{in_clause}')
