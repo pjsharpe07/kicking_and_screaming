@@ -46,27 +46,28 @@ asa_client = AmericanSoccerAnalysis()
 
 #### games
 
-
 game_data_present = check_for_existing_data(
     schema="raw", table_name="games", cursor=cursor
 )
 
 game_data = asa_client.get_games(leagues="mls", seasons="2024")
 
-if game_data_present:
+if game_data_present and len(game_data) > 0:
 
-    missing_games = filter_values_from_df(
-        source_table="kicking_dev.raw.games",
-        target_df=game_data,
-        checking_column="game_id",
-        cursor=cursor,
-    )
+    ##  apparently the upstream data from the api gets reinstated?
+    ##  so we can't do this
+    # missing_games = filter_values_from_df(
+    #     source_table="kicking_dev.raw.games",
+    #     target_df=game_data,
+    #     checking_column="game_id",
+    #     cursor=cursor,
+    # )
 
-    cursor.sql("INSERT INTO raw.games SELECT * FROM missing_games")
-    print(f"[games_etl] Inserted {len(missing_games)} new rows into games data")
-else:
-    cursor.sql("INSERT INTO raw.games SELECT * FROM game_data")
-    print(f"[games_etl] Inserted {len(game_data)} rows into game data")
+    cursor.sql("DELETE FROM raw.games")
+    print(f"[games_etl] Deleted raw games data")
+
+cursor.sql("INSERT INTO raw.games SELECT * FROM game_data")
+print(f"[games_etl] Inserted {len(game_data)} rows into game data")
 
 
 ### get_game_xgoals
@@ -76,22 +77,24 @@ game_xg_data_present = check_for_existing_data(
 
 # filter game ids if we already have it
 # note that if game_ids is null, then it will return ALL games
-if game_xg_data_present:
-    game_ids = filter_by_missing_field(
-        source_table="kicking_dev.raw.games",
-        target_table="kicking_dev.raw.game_xg",
-        checking_column="game_id",
-        cursor=cursor,
-    )
-    if len(game_ids) > 0:
-        game_xg_data = asa_client.get_game_xgoals(leagues="mls", game_ids=game_ids)
-        cursor.sql("INSERT INTO raw.game_xg SELECT * FROM game_xg_data")
-        print(f"[games_etl] Inserted {len(game_xg_data)} rows into game_xg table")
-    else:
-        print(f"[games_etl] Inserted {len(game_ids)} rows into game_xg table")
-else:
-    game_xg_data = asa_client.get_game_xgoals(leagues="mls", game_ids=game_ids)
-    game_ids = list(game_data["game_id"].unique())
+
+game_xg_data = asa_client.get_game_xgoals(leagues="mls", season_name='2024')
+
+if game_xg_data_present and len(game_xg_data) > 0:
+
+    #### apparently upstream data gets re
+    # game_ids = filter_by_missing_field(
+    #     source_table="kicking_dev.raw.games",
+    #     target_table="kicking_dev.raw.game_xg",
+    #     checking_column="game_id",
+    #     cursor=cursor,
+    # )
+
+    cursor.sql("DELETE FROM raw.game_xg")
+    print("[games_etl] Deleted data from raw.game_xg")
+
+cursor.sql("INSERT INTO raw.game_xg SELECT * FROM game_xg_data")
+print(f"[games_etl] Inserted {len(game_xg_data)} rows into game_xg table")
 
 
 ### get_stadia
