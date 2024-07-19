@@ -23,7 +23,11 @@ Raw is generated from the python scripts (details below) and intermediate & purt
 
 #### Generating raw data
 
-Raw is generated from the [3 python scripts](./raw_data_etl/) that will load raw data into a duckdb database. You can run them in any order. Each one will create a directory called `data` if it doesn't exist where a database called `kicking_dev.db` will be created.
+Raw is generated from the [3 python scripts](./raw_data_etl/) that will load raw data into a duckdb database. 
+
+You **must** run [fetch game data](./raw_data_etl/fetch_game_data.py) first and can then run the other two in any order. Each one will create a directory called `data` if it doesn't exist where a database called `kicking_dev.db` will be created.
+
+OR you can you can execute [run_all.sh](./run_all.sh) which will run all the raw data and build downstream models with dbt.
 
 This loads data into the `raw` schema of your database. Note that this will only load data into each table if the table doesn't already have data. Incremental updates will be released in future versions.
 
