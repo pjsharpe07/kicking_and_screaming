@@ -134,7 +134,7 @@ player_xpass_data_present = check_for_existing_data(
 
 if player_xpass_data_present:
     cursor.sql("DELETE FROM kicking_dev.raw.player_xpass")
-    print("[player_etl] delete from raw.player_xpass")
+    print("[player_etl] Deleted from raw.player_xpass")
 
 player_xpass_data = asa_client.get_player_xpass(
     leagues="mls", season_name="2024", split_by_games=True
