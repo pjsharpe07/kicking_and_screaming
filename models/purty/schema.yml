@@ -18,8 +18,27 @@ models:
           - not_null
 
   - name: team_gplus_agg
-    alias: team_gplus
     description: "Aggregated team gplus data with rankings by league and conference"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: team_gplus_offense_agg
+    description: > 
+      Aggregated team gplus for offensive actions data with rankings by league and conference
+      Actions include: Passing, Receiving, Shooting, Dribbling
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: team_gplus_defense_agg
+    description: > 
+      Aggregated team gplus for defensive actions data with rankings by league and conference
+      Actions include: Interrupting, Claiming, Fouling
     columns:
       - name: team_id
         data_tests:

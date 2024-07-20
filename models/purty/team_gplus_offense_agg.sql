@@ -3,6 +3,7 @@ with gplus_agg AS (
 	, SUM(goals_added_for) AS total_gplus
 	, SUM(ga_diff) AS total_gplus_diff -- TODO: is this interesting?
 	FROM {{ ref('team_gplus') }}
+	WHERE action_type NOT IN ('Interrupting', 'Claiming', 'Fouling')
 	GROUP BY 1
 ) SELECT 
 teams.team_id
