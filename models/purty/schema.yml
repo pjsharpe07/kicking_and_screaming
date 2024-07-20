@@ -16,3 +16,12 @@ models:
         data_tests:
           - unique
           - not_null
+
+  - name: team_gplus_agg
+    alias: team_gplus
+    description: "Aggregated team gplus data with rankings by league and conference"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null

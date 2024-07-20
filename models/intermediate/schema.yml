@@ -16,3 +16,7 @@ models:
         data_tests:
           - unique
           - not_null
+
+  - name: team_gplus
+    alias: team_goals_added
+    description: "This is a clean version of the raw.team_goals_added"
