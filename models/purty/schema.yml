@@ -44,3 +44,27 @@ models:
         data_tests:
           - unique
           - not_null
+
+  - name: team_xg_agg
+    description: "Aggregated team expected goals data. Note that this comes almost complete via the ASA api"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: league_rankings
+    description: "The league rankings including points, xg, and gplus"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: conference_rankings
+    description: "The conference rankings including points, xg, and gplus"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
