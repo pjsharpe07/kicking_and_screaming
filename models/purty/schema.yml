@@ -68,3 +68,11 @@ models:
         data_tests:
           - unique
           - not_null
+
+  - name: aggregate_stats_with_points
+    descriptions: "Includes some shield standings with xgoals and gplus"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
