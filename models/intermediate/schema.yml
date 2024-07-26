@@ -16,3 +16,15 @@ models:
         data_tests:
           - unique
           - not_null
+
+  - name: team_gplus
+    alias: team_goals_added
+    description: "This is a clean version of the raw.team_goals_added"
+
+  - name: teams_clean
+    description: "The teams information including ids and conference "
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null

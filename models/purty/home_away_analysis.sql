@@ -11,5 +11,5 @@ haa.team_id
 , ROW_NUMBER() OVER(ORDER BY avg_points_home DESC) AS rank_home
 , ROW_NUMBER() OVER(ORDER BY avg_points_away DESC) AS rank_away
 FROM home_away_analysis haa
-LEFT JOIN {{ source('raw', 'teams') }} teams
+LEFT JOIN {{ ref('teams_clean') }} teams
 ON haa.team_id = teams.team_id

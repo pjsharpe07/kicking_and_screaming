@@ -1,6 +1,6 @@
 SELECT games_agg.team_id
 , teams.team_name
-, conf.conference
+, teams.conference
 , games_agg.num_home_games + games_agg.num_away_games AS games_played
 , games_agg.points_home
 , games_agg.points_away
@@ -11,7 +11,5 @@ SELECT games_agg.team_id
 , ROW_NUMBER() OVER(ORDER BY points_per_game DESC) AS shield_ppg_standings
 , ROW_NUMBER() OVER(PARTITION BY conference ORDER BY points_per_game DESC) AS conference_ppg_standings
 FROM {{ ref('home_away_agg') }} games_agg
-LEFT JOIN {{ source('raw', 'teams') }} teams
+LEFT JOIN {{ ref('teams_clean') }} teams
 ON games_agg.team_id = teams.team_id
-LEFT JOIN {{ source('raw', 'team_conferences') }} conf
-ON teams.team_name = conf.team_name

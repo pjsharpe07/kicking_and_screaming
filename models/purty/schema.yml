@@ -16,3 +16,63 @@ models:
         data_tests:
           - unique
           - not_null
+
+  - name: team_gplus_agg
+    description: "Aggregated team gplus data with rankings by league and conference"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: team_gplus_offense_agg
+    description: > 
+      Aggregated team gplus for offensive actions data with rankings by league and conference
+      Actions include: Passing, Receiving, Shooting, Dribbling
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: team_gplus_defense_agg
+    description: > 
+      Aggregated team gplus for defensive actions data with rankings by league and conference
+      Actions include: Interrupting, Claiming, Fouling
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: team_xg_agg
+    description: "Aggregated team expected goals data. Note that this comes almost complete via the ASA api"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: league_rankings
+    description: "The league rankings including points, xg, and gplus"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: conference_rankings
+    description: "The conference rankings including points, xg, and gplus"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: aggregate_stats_with_points
+    descriptions: "Includes some shield standings with xgoals and gplus"
+    columns:
+      - name: team_id
+        data_tests:
+          - unique
+          - not_null
