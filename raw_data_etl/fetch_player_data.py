@@ -72,7 +72,7 @@ if player_data_present:
     print(f"[player_etl] Deleted at least {num_matching_keys} from players table")
 
 cursor.sql("INSERT INTO raw.players SELECT * FROM player_data")
-print(f"[player_etl] Inserted {len(player_data)} rows into players table")
+print(f"[player_etl] Inserted {len(player_data):,} rows into players table")
 
 
 # players ga
@@ -112,7 +112,7 @@ for action_type in action_types:
     # now insert
     cursor.sql("INSERT INTO raw.player_goals_added SELECT * FROM player_ga_data")
     print(
-        f"[player_etl] Inserted {len(player_ga_data)} rows into player GA data for",
+        f"[player_etl] Inserted {len(player_ga_data):,} rows into player GA data for",
         action_type,
     )
 
@@ -131,7 +131,7 @@ player_xg_data = asa_client.get_player_xgoals(
     leagues="mls", season_name="2024", split_by_teams=True, split_by_games=True
 )
 cursor.sql("INSERT INTO raw.player_xg SELECT * FROM player_xg_data")
-print(f"[player_etl] Inserted {len(player_xg_data)} rows for player xg")
+print(f"[player_etl] Inserted {len(player_xg_data):,} rows for player xg")
 
 
 # player xpass
@@ -148,7 +148,7 @@ player_xpass_data = asa_client.get_player_xpass(
     leagues="mls", season_name="2024", split_by_games=True
 )
 cursor.sql("INSERT INTO raw.player_xpass SELECT * FROM player_xpass_data")
-print(f"[player_etl] Inserted {len(player_xpass_data)} rows for player xpass")
+print(f"[player_etl] Inserted {len(player_xpass_data):,} rows for player xpass")
 
 # player salaries
 
@@ -181,7 +181,7 @@ goalie_xg_data = asa_client.get_goalkeeper_xgoals(
     leagues="mls", season_name="2024", split_by_games=True
 )
 cursor.sql("INSERT INTO raw.goalie_xg SELECT * FROM goalie_xg_data")
-print(f"[player_etl] Inserted {len(goalie_xg_data)} rows into goalie xg data")
+print(f"[player_etl] Inserted {len(goalie_xg_data):,} rows into goalie xg data")
 
 
 # goalie ga data
