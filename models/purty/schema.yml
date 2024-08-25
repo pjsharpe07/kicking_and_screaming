@@ -76,3 +76,34 @@ models:
         data_tests:
           - unique
           - not_null
+
+  - name: player_xg_agg
+    description: "Player xg data with rolling averages and sums from each matchday game"
+    columns:
+      - name: rolling_three_game_xgsum
+        description: "The sum of xg from the last 3 games the player has played in"
+        data_tests:
+          - not_null
+
+      - name: rolling_five_game_xgsum
+        description: "The sum of xg from the last 5 games the player has played in"
+        data_tests:
+          - not_null
+
+      - name: rolling_three_game_xgavg
+        description: "The average xg from the last 3 games the player has played in"
+        data_tests:
+          - not_null
+
+      - name: rolling_five_game_xgavg
+        description: "The average xg from the last 3 games the player has played in"
+        data_tests:
+          - not_null
+
+  - name: player_xg_current_agg
+    description: "Player xg data as of the last game the player played"
+    columns:
+      - name: player_id
+        data_tests:
+          - unique
+          - not_null

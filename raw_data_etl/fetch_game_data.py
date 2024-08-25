@@ -67,7 +67,7 @@ if game_data_present and len(game_data) > 0:
     print(f"[games_etl] Deleted raw games data")
 
 cursor.sql("INSERT INTO raw.games SELECT * FROM game_data")
-print(f"[games_etl] Inserted {len(game_data)} rows into game data")
+print(f"[games_etl] Inserted {len(game_data):,} rows into game data")
 
 
 ### get_game_xgoals
@@ -94,7 +94,7 @@ if game_xg_data_present and len(game_xg_data) > 0:
     print("[games_etl] Deleted data from raw.game_xg")
 
 cursor.sql("INSERT INTO raw.game_xg SELECT * FROM game_xg_data")
-print(f"[games_etl] Inserted {len(game_xg_data)} rows into game_xg table")
+print(f"[games_etl] Inserted {len(game_xg_data):,} rows into game_xg table")
 
 
 ### get_stadia
@@ -112,4 +112,4 @@ if stadium_data_present:
 else:
     stadia_data = asa_client.get_stadia(leagues="mls")
     cursor.sql("INSERT INTO raw.stadiums SELECT * FROM stadia_data")
-    print(f"[games_etl] Inserted {len(stadia_data)} rows for stadiums")
+    print(f"[games_etl] Inserted {len(stadia_data):,} rows for stadiums")

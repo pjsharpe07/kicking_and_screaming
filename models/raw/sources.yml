@@ -73,3 +73,15 @@ sources:
             data_tests:
               - not_null
               - unique
+
+      - name: players
+        description: "One record per player_id"
+        columns:
+          - name: player_id
+            description: "The unique player id"
+            data_tests:
+              - not_null
+              - unique
+
+      - name: player_xg
+        description: "One record per game and player_id"

@@ -110,7 +110,7 @@ if conf_data_present:
     )
 
 cursor.sql("INSERT INTO raw.team_conferences SELECT * FROM conference_df")
-print(f"[teams_etl] Inserted {len(conference_df)} into raw.team_conferences")
+print(f"[teams_etl] Inserted {len(conference_df):,} into raw.team_conferences")
 
 
 # now start fetching the raw data from ASA
@@ -135,7 +135,7 @@ if team_data_present:
     )
 
 cursor.sql("INSERT INTO raw.teams SELECT * FROM team_data")
-print(f"[teams_etl] Inserted {len(team_data)} into teams table")
+print(f"[teams_etl] Inserted {len(team_data):,} into teams table")
 
 
 # team goals added -- we have to unnest the data for this one
@@ -189,7 +189,7 @@ if team_salary_data_present and len(team_salary_data) > 0:
 
 
 cursor.sql("INSERT INTO raw.team_salaries SELECT * FROM team_salary_data")
-print(f"[teams_etl] Inserted {len(team_salary_data)} rows into salary table")
+print(f"[teams_etl] Inserted {len(team_salary_data):,} rows into salary table")
 
 
 # team xg data
@@ -206,7 +206,7 @@ if team_xg_data_present and len(team_xg_data) > 0:
 
 
 cursor.sql("INSERT INTO raw.team_xg SELECT * FROM team_xg_data")
-print(f"[teams_etl] Inserted {len(team_xg_data)} rows into team xg table")
+print(f"[teams_etl] Inserted {len(team_xg_data):,} rows into team xg table")
 
 # team xpass data
 
@@ -222,7 +222,7 @@ if team_xpass_data_present and len(team_xpass_data) > 0:
     print("[teams_etl] Deleted data from team_xpass table ")
 
 cursor.sql("INSERT INTO raw.team_xpass SELECT * FROM team_xpass_data")
-print(f"[teams_etl] Inserted {len(team_xpass_data)} rows into team_xpass table")
+print(f"[teams_etl] Inserted {len(team_xpass_data):,} rows into team_xpass table")
 
 
 # manager data
@@ -245,4 +245,4 @@ if manager_data_present:
 
 
 cursor.sql("INSERT INTO raw.managers SELECT * FROM manager_data")
-print(f"[teams_etl] Inserted {len(manager_data)} rows into managers table")
+print(f"[teams_etl] Inserted {len(manager_data):,} rows into managers table")

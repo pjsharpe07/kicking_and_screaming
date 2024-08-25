@@ -28,3 +28,6 @@ models:
         data_tests:
           - unique
           - not_null
+
+  - name: player_xg
+    description: "Player xg with game matchday and player name"
