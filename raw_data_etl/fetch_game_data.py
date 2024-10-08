@@ -9,8 +9,6 @@ from schemas_and_starting_scripts.raw_games_tables import (
 from utils import (
     check_for_existing_data,
     create_schema_if_not_exists,
-    filter_by_missing_field,
-    filter_values_from_df,
 )
 
 # suppress warnings -- pandas deprecation warning
