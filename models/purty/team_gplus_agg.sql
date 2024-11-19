@@ -8,6 +8,7 @@ with gplus_agg AS (
 ) SELECT 
 teams.team_id
 , teams.team_name
+, tg.season_name
 , teams.conference
 , stand.games_played 
 , tg.total_gplus
