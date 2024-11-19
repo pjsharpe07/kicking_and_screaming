@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS raw.players (
 player_ga_table = """
 CREATE TABLE IF NOT EXISTS raw.player_goals_added (
 	player_id VARCHAR,
+    season_name INTEGER,
 	game_id VARCHAR,
 	team_id VARCHAR,
 	general_position VARCHAR,
@@ -42,6 +43,7 @@ CREATE TABLE IF NOT EXISTS raw.player_goals_added (
 player_xg_table = """
 CREATE TABLE IF NOT EXISTS raw.player_xg (
 	player_id VARCHAR,
+    season_name INTEGER,
 	game_id VARCHAR,
 	team_id VARCHAR,
 	general_position VARCHAR,
@@ -65,6 +67,7 @@ CREATE TABLE IF NOT EXISTS raw.player_xg (
 player_xpass_table = """
 CREATE TABLE IF NOT EXISTS raw.player_xpass (
 	player_id VARCHAR,
+    season_name INTEGER,
 	game_id VARCHAR,
 	team_id VARCHAR,
 	general_position VARCHAR,
@@ -95,6 +98,7 @@ CREATE TABLE IF NOT EXISTS raw.player_salaries (
 goalie_xg_table = """
 CREATE TABLE IF NOT EXISTS raw.goalie_xg (
 	player_id VARCHAR,
+    season_name INTEGER,
 	game_id VARCHAR,
 	team_id VARCHAR,
 	minutes_played INTEGER,
@@ -111,6 +115,7 @@ CREATE TABLE IF NOT EXISTS raw.goalie_xg (
 goalie_ga_table = """
 CREATE TABLE IF NOT EXISTS raw.goalie_goals_added (
 	player_id VARCHAR,
+    season_name INTEGER,
 	game_id VARCHAR,
 	team_id VARCHAR,
 	minutes_played INTEGER,

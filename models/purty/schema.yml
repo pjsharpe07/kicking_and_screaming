@@ -6,7 +6,10 @@ models:
     columns:
       - name: team_id
         data_tests:
-          - unique
+          - not_null
+
+      - name: season_name
+        data_tests:
           - not_null
 
   - name: home_away_analysis
@@ -14,7 +17,10 @@ models:
     columns:
       - name: team_id
         data_tests:
-          - unique
+          - not_null
+
+      - name: season_name
+        data_tests:
           - not_null
 
   - name: team_gplus_agg
@@ -22,27 +28,10 @@ models:
     columns:
       - name: team_id
         data_tests:
-          - unique
           - not_null
 
-  - name: team_gplus_offense_agg
-    description: > 
-      Aggregated team gplus for offensive actions data with rankings by league and conference
-      Actions include: Passing, Receiving, Shooting, Dribbling
-    columns:
-      - name: team_id
+      - name: season_name
         data_tests:
-          - unique
-          - not_null
-
-  - name: team_gplus_defense_agg
-    description: > 
-      Aggregated team gplus for defensive actions data with rankings by league and conference
-      Actions include: Interrupting, Claiming, Fouling
-    columns:
-      - name: team_id
-        data_tests:
-          - unique
           - not_null
 
   - name: team_xg_agg
@@ -50,7 +39,10 @@ models:
     columns:
       - name: team_id
         data_tests:
-          - unique
+          - not_null
+
+      - name: season_name
+        data_tests:
           - not_null
 
   - name: league_rankings
@@ -58,7 +50,10 @@ models:
     columns:
       - name: team_id
         data_tests:
-          - unique
+          - not_null
+
+      - name: season_name
+        data_tests:
           - not_null
 
   - name: conference_rankings
@@ -66,7 +61,6 @@ models:
     columns:
       - name: team_id
         data_tests:
-          - unique
           - not_null
 
   - name: aggregate_stats_with_points
@@ -74,7 +68,10 @@ models:
     columns:
       - name: team_id
         data_tests:
-          - unique
+          - not_null
+
+      - name: season_name
+        data_tests:
           - not_null
 
   - name: player_xg_agg
@@ -100,10 +97,17 @@ models:
         data_tests:
           - not_null
 
+      - name: season_name
+        data_tests:
+          - not_null
+
+      - name: player_id
+        data_tests:
+          - not_null
+
   - name: player_xg_current_agg
     description: "Player xg data as of the last game the player played"
     columns:
       - name: player_id
         data_tests:
-          - unique
           - not_null

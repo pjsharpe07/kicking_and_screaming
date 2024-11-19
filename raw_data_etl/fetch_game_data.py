@@ -9,22 +9,18 @@ from schemas_and_starting_scripts.raw_games_tables import (
 from utils import (
     check_for_existing_data,
     create_schema_if_not_exists,
-    filter_by_missing_field,
-    filter_values_from_df,
 )
-
-# suppress warnings -- pandas deprecation warning
-# Remove once newer version of itscalledsoccer is released
-import warnings
-
-warnings.filterwarnings("ignore")
-
 
 path_to_database = os.path.join(os.getcwd(), "data", "kicking_dev.db")
 
 # make the data directory if it doesn't exist
 os.makedirs(os.path.dirname(path_to_database), exist_ok=True)
 
+# check for season name value
+if "season_name" not in globals():
+    season_name = int(input("Which season do you want to pull data? "))
+
+print(f"[games_etl] Pulling game data for season: {season_name}")
 
 cursor = duckdb.connect(path_to_database)
 
@@ -37,7 +33,7 @@ print("[games_etl] games table created/exists")
 cursor.execute(game_xg_table)
 print("[games_etl] xg table created")
 cursor.execute(stadium_table)
-print("[games_etl] data created")
+print("[games_etl] stadium data created")
 
 # fetch raw data from asa
 
@@ -50,7 +46,7 @@ game_data_present = check_for_existing_data(
     schema="raw", table_name="games", cursor=cursor
 )
 
-game_data = asa_client.get_games(leagues="mls", seasons="2024")
+game_data = asa_client.get_games(leagues="mls", seasons=season_name)
 
 if game_data_present and len(game_data) > 0:
 
@@ -63,7 +59,7 @@ if game_data_present and len(game_data) > 0:
     #     cursor=cursor,
     # )
 
-    cursor.sql("DELETE FROM raw.games")
+    cursor.sql(f"DELETE FROM raw.games WHERE season_name = {season_name}")
     print(f"[games_etl] Deleted raw games data")
 
 cursor.sql("INSERT INTO raw.games SELECT * FROM game_data")
@@ -78,7 +74,7 @@ game_xg_data_present = check_for_existing_data(
 # filter game ids if we already have it
 # note that if game_ids is null, then it will return ALL games
 
-game_xg_data = asa_client.get_game_xgoals(leagues="mls", season_name="2024")
+game_xg_data = asa_client.get_game_xgoals(leagues="mls", season_name=season_name)
 
 if game_xg_data_present and len(game_xg_data) > 0:
 
@@ -90,7 +86,10 @@ if game_xg_data_present and len(game_xg_data) > 0:
     #     cursor=cursor,
     # )
 
-    cursor.sql("DELETE FROM raw.game_xg")
+    # manually add the season name variable
+    game_xg_data.insert(2, "season_name", season_name)
+
+    cursor.sql(f"DELETE FROM raw.game_xg WHERE season_name = {season_name}")
     print("[games_etl] Deleted data from raw.game_xg")
 
 cursor.sql("INSERT INTO raw.game_xg SELECT * FROM game_xg_data")

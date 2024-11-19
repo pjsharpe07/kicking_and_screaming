@@ -19,11 +19,11 @@ from utils import (
 )
 from tqdm import tqdm
 
-# suppress warnings -- pandas deprecation warning
-# Remove once newer version of itscalledsoccer is released
-import warnings
+# check for season name value
+if "season_name" not in globals():
+    season_name = int(input("Which season do you want to pull data? "))
 
-warnings.filterwarnings("ignore")
+print(f"[teams_etl] Pulling team data for season: {season_name}")
 
 
 path_to_database = os.path.join(os.getcwd(), "data", "kicking_dev.db")
@@ -115,8 +115,6 @@ print(f"[teams_etl] Inserted {len(conference_df):,} into raw.team_conferences")
 
 # now start fetching the raw data from ASA
 
-# team data
-
 asa_client = AmericanSoccerAnalysis()
 
 team_data_present = check_for_existing_data(
@@ -144,13 +142,16 @@ team_ga_data_present = check_for_existing_data(
     schema="raw", table_name="team_goals_added", cursor=cursor
 )
 
-team_ga_data = asa_client.get_team_goals_added(leagues="mls", season_name="2024")
+team_ga_data = asa_client.get_team_goals_added(leagues="mls", season_name=season_name)
 
 if team_ga_data_present and len(team_ga_data) > 0:
     # duckdb doesn't have great upsert logic. Don't want to write a big gross update statement
     # So, I'll just completely delete and reinsert
-    cursor.sql("DELETE FROM raw.team_goals_added")
+    cursor.sql(f"DELETE FROM raw.team_goals_added WHERE season_name={season_name}")
     print("[teams_etl] Deleted data from team_goals_added")
+
+    # manually add the season_name variable
+    team_ga_data.insert(2, "season_name", season_name)
 
 
 for i in tqdm(
@@ -164,9 +165,9 @@ for i in tqdm(
     for value in struct_value:
         insert_stmt = f"""
         INSERT INTO raw.team_goals_added
-        (team_id, minutes, data)
+        (team_id, minutes, season_name, data)
         VALUES
-        ('{team_id}',{minutes},{value})
+        ('{team_id}', {minutes}, {season_name}, {value})
         """
 
         cursor.sql(insert_stmt)
@@ -197,14 +198,14 @@ team_xg_data_present = check_for_existing_data(
     schema="raw", table_name="team_xg", cursor=cursor
 )
 
-team_xg_data = asa_client.get_team_xgoals(leagues="mls", season_name="2024")
+team_xg_data = asa_client.get_team_xgoals(leagues="mls", season_name=season_name)
 
 
 if team_xg_data_present and len(team_xg_data) > 0:
-    cursor.sql("DELETE FROM kicking_dev.raw.team_xg")
+    cursor.sql(f"DELETE FROM kicking_dev.raw.team_xg WHERE season_name={season_name}")
     print("[teams_etl] Deleted data for team_xg")
 
-
+team_xg_data.insert(1, "season_name", season_name)
 cursor.sql("INSERT INTO raw.team_xg SELECT * FROM team_xg_data")
 print(f"[teams_etl] Inserted {len(team_xg_data):,} rows into team xg table")
 
@@ -214,13 +215,14 @@ team_xpass_data_present = check_for_existing_data(
     schema="raw", table_name="team_xpass", cursor=cursor
 )
 
-team_xpass_data = asa_client.get_team_xpass(leagues="mls", season_name="2024")
+team_xpass_data = asa_client.get_team_xpass(leagues="mls", season_name=season_name)
 
 
 if team_xpass_data_present and len(team_xpass_data) > 0:
     cursor.sql("DELETE FROM kicking_dev.raw.team_xpass")
     print("[teams_etl] Deleted data from team_xpass table ")
 
+team_xpass_data.insert(1, "season_name", season_name)
 cursor.sql("INSERT INTO raw.team_xpass SELECT * FROM team_xpass_data")
 print(f"[teams_etl] Inserted {len(team_xpass_data):,} rows into team_xpass table")
 

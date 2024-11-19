@@ -8,8 +8,8 @@ SELECT
 haa.team_id
 , teams.team_name
 , haa.* EXCLUDE (team_id)
-, ROW_NUMBER() OVER(ORDER BY avg_points_home DESC) AS rank_home
-, ROW_NUMBER() OVER(ORDER BY avg_points_away DESC) AS rank_away
+, ROW_NUMBER() OVER(PARTITION BY season_name ORDER BY avg_points_home DESC) AS rank_home
+, ROW_NUMBER() OVER(PARTITION BY season_name ORDER BY avg_points_away DESC) AS rank_away
 FROM home_away_analysis haa
 LEFT JOIN {{ ref('teams_clean') }} teams
 ON haa.team_id = teams.team_id

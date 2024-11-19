@@ -1,5 +1,6 @@
 SELECT stand.team_id
 , stand.team_name
+, stand.season_name
 , stand.total_points
 , stand.points_per_game
 , stand.shield_standings

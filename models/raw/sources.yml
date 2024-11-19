@@ -72,7 +72,6 @@ sources:
             description: "The unique team id"
             data_tests:
               - not_null
-              - unique
 
       - name: players
         description: "One record per player_id"

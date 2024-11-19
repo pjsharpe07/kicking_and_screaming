@@ -33,6 +33,7 @@ game_xg_table = """
 CREATE TABLE IF NOT EXISTS raw.game_xg (
 	game_id VARCHAR PRIMARY KEY,
 	date_time_utc TIMESTAMPTZ,
+    season_name INTEGER,
 	home_team_id VARCHAR,
 	home_goals INTEGER,
 	home_team_xgoals REAL,

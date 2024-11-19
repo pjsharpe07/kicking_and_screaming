@@ -1,6 +1,7 @@
 WITH DATA AS (
 	SELECT team.team_id
 	, team.team_name
+	, gp.season_name
 	, gp.action_type
 	, gp.goals_added_for
 	, gp.goals_added_against

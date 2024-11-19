@@ -17,11 +17,11 @@ from schemas_and_starting_scripts.raw_player_tables import (
 )
 from tqdm import tqdm
 
-# suppress warnings -- pandas deprecation warning
-# Remove once newer version of itscalledsoccer is released
-import warnings
+# check for season name value
+if "season_name" not in globals():
+    season_name = int(input("Which season do you want to pull data? "))
 
-warnings.filterwarnings("ignore")
+print(f"[player_etl] Pulling player data for season: {season_name}")
 
 path_to_database = os.path.join(os.getcwd(), "data", "kicking_dev.db")
 
@@ -93,18 +93,23 @@ action_types = [
 ]
 
 if player_ga_data_present:
-    cursor.sql("DELETE FROM kicking_dev.raw.player_goals_added")
+    cursor.sql(
+        f"DELETE FROM kicking_dev.raw.player_goals_added WHERE season_name = {season_name}"
+    )
     print("[player etl] Deleted records from raw.player_goals_added")
 
 for action_type in action_types:
 
     player_ga_data = asa_client.get_player_goals_added(
         leagues="mls",
-        season_name="2024",
+        season_name=season_name,
         split_by_games=True,
         action_type=action_type,
         minimum_minutes=427,  # ~1/4 of playable minutes thus far
     )
+
+    # manually add the season name column
+    player_ga_data.insert(1, "season_name", season_name)
 
     # now unnest the "data" column
     player_ga_data["data"] = player_ga_data["data"].apply(lambda x: x[0])
@@ -112,8 +117,7 @@ for action_type in action_types:
     # now insert
     cursor.sql("INSERT INTO raw.player_goals_added SELECT * FROM player_ga_data")
     print(
-        f"[player_etl] Inserted {len(player_ga_data):,} rows into player GA data for",
-        action_type,
+        f"[player_etl] Inserted {len(player_ga_data):,} rows into player GA data for {action_type}"
     )
 
 
@@ -124,12 +128,18 @@ player_xg_data_present = check_for_existing_data(
 )
 
 if player_xg_data_present:
-    cursor.sql("DELETE FROM kicking_dev.raw.player_xg")
+    cursor.sql(
+        f"DELETE FROM kicking_dev.raw.player_xg WHERE season_name = {season_name}"
+    )
     print("[player_etl] Deleted records from raw.player_xg")
 
 player_xg_data = asa_client.get_player_xgoals(
-    leagues="mls", season_name="2024", split_by_teams=True, split_by_games=True
+    leagues="mls", season_name=season_name, split_by_teams=True, split_by_games=True
 )
+
+# manually add the season name variable
+player_xg_data.insert(1, "season_name", season_name)
+
 cursor.sql("INSERT INTO raw.player_xg SELECT * FROM player_xg_data")
 print(f"[player_etl] Inserted {len(player_xg_data):,} rows for player xg")
 
@@ -141,12 +151,17 @@ player_xpass_data_present = check_for_existing_data(
 )
 
 if player_xpass_data_present:
-    cursor.sql("DELETE FROM kicking_dev.raw.player_xpass")
+    cursor.sql(
+        f"DELETE FROM kicking_dev.raw.player_xpass WHERE season_name = {season_name}"
+    )
     print("[player_etl] Deleted from raw.player_xpass")
 
 player_xpass_data = asa_client.get_player_xpass(
     leagues="mls", season_name="2024", split_by_games=True
 )
+
+player_xpass_data.insert(1, "season_name", season_name)
+
 cursor.sql("INSERT INTO raw.player_xpass SELECT * FROM player_xpass_data")
 print(f"[player_etl] Inserted {len(player_xpass_data):,} rows for player xpass")
 
@@ -174,12 +189,17 @@ goalie_xg_data_present = check_for_existing_data(
 )
 
 if goalie_xg_data_present:
-    cursor.sql("DELETE FROM kicking_dev.raw.goalie_xg")
+    cursor.sql(
+        f"DELETE FROM kicking_dev.raw.goalie_xg WHERE season_name = {season_name}"
+    )
     print("[player_etl] Deleted records from raw.goalie_xg")
 
 goalie_xg_data = asa_client.get_goalkeeper_xgoals(
-    leagues="mls", season_name="2024", split_by_games=True
+    leagues="mls", season_name=season_name, split_by_games=True
 )
+
+goalie_xg_data.insert(1, "season_name", season_name)
+
 cursor.sql("INSERT INTO raw.goalie_xg SELECT * FROM goalie_xg_data")
 print(f"[player_etl] Inserted {len(goalie_xg_data):,} rows into goalie xg data")
 
@@ -191,7 +211,9 @@ goalie_ga_data_present = check_for_existing_data(
 )
 
 if goalie_ga_data_present:
-    cursor.sql("DELETE FROM kicking_dev.raw.goalie_goals_added")
+    cursor.sql(
+        f"DELETE FROM kicking_dev.raw.goalie_goals_added WHERE season_name = {season_name}"
+    )
     print("[player_etl] Deleted records from raw.goalie_g+")
 
 goalie_ga_data_present = asa_client.get_goalkeeper_goals_added(
@@ -210,9 +232,9 @@ for i in tqdm(range(len(goalie_ga_data_present)), "Inserting goalie ga data"):
     for value in struct_value:
         insert_stmt = f"""
         INSERT INTO raw.goalie_goals_added
-        (player_id, game_id, team_id, minutes_played, data)
+        (player_id, season_name, game_id, team_id, minutes_played, data)
         VALUES
-        ('{player_id}', '{game_id}', '{team_id}', {minutes_played}, {value})
+        ('{player_id}', {season_name}, '{game_id}', '{team_id}', {minutes_played}, {value})
         """
         cursor.sql(insert_stmt)
 

@@ -1,5 +1,6 @@
 SELECT xg.player_id
 , p.player_name
+, xg.season_name
 , xg.game_id
 , g.matchday
 , xg.general_position

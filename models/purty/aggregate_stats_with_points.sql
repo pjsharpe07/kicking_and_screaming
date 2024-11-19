@@ -1,4 +1,5 @@
 SELECT stand.team_id
+, stand.season_name
 , stand.team_name
 , stand.conference 
 , stand.total_points
