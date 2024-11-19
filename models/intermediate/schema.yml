@@ -14,7 +14,6 @@ models:
     columns:
       - name: team_id
         data_tests:
-          - unique
           - not_null
 
   - name: team_gplus

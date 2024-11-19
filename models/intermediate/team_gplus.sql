@@ -1,5 +1,6 @@
 SELECT team_id
 , minutes
+, season_name
 , data.action_type as action_type
 , data.num_actions_for as goals_added_for
 , data.goals_added_for as goals_added_above_avg

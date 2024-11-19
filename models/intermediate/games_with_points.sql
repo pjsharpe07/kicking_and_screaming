@@ -1,4 +1,5 @@
 SELECT game_id
+, season_name
 , home_team_id
 , away_team_id
 , CASE
