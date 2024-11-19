@@ -25,6 +25,7 @@ team_goals_added_table = """
 CREATE TABLE IF NOT EXISTS raw.team_goals_added (
 	team_id VARCHAR,
     minutes INTEGER,
+    season_name INTEGER,
     data STRUCT(
 		action_type VARCHAR, 
 		num_actions_for INTEGER, 
@@ -49,6 +50,7 @@ CREATE TABLE IF NOT EXISTS raw.team_salaries (
 team_xg_table = """
 CREATE TABLE IF NOT EXISTS raw.team_xg (
 	team_id VARCHAR PRIMARY KEY,
+    season_name INTEGER,
 	count_games INTEGER,
 	shots_for INTEGER,
 	shots_against INTEGER,
@@ -67,6 +69,7 @@ CREATE TABLE IF NOT EXISTS raw.team_xg (
 team_xpass_table = """
 CREATE TABLE IF NOT EXISTS raw.team_xpass (
 	team_id VARCHAR,
+    season_name INTEGER,
 	count_games INTEGER,
 	attempted_passes_for INTEGER,
 	pass_completion_percentage_for REAL,

@@ -23,13 +23,11 @@ Raw is generated from the python scripts (details below) and intermediate & purt
 
 #### Generating raw data
 
-Raw is generated from the [3 python scripts](./raw_data_etl/) that will load raw data into a duckdb database. 
+Raw is generated from the [run_all.py](./raw_data_etl/run_all.py) script kicks off the other [3 python scripts in the raw_data_etl folder](./raw_data_etl/).
 
-You **must** run [fetch game data](./raw_data_etl/fetch_game_data.py) first and can then run the other two in any order. Each one will create a directory called `data` if it doesn't exist where a database called `kicking_dev.db` will be created.
+Your easiest path is to run the [run_all.sh](./run_all.sh) which will run all the raw data and build downstream models with dbt. It will ask you for the mls year that you want to pull.
 
-OR you can you can execute [run_all.sh](./run_all.sh) which will run all the raw data and build downstream models with dbt.
-
-This loads data into the `raw` schema of your database. Note that this will only load data into each table if the table doesn't already have data. Incremental updates will be released in future versions.
+This loads data into the `raw` schema of your database. Most raw tables are completely replaced for all data in the year that was specified.
 
 A sample python code to load player data would be below. Note that you should execute from the root of this repository. TODO: update to use absolute file paths instead of relative.
 
@@ -37,7 +35,7 @@ A sample python code to load player data would be below. Note that you should ex
 python raw_data_etl/fetch_player_data.py
 ```
 
-This loads some player data which you can then query like:
+It will prompt you for the year then loads some player data which you can then query like:
 
 ```
 SELECT *
