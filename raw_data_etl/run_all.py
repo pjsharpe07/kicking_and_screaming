@@ -11,7 +11,7 @@ print(f"Pulling all mls data for the year {season_name}")
 file_paths = [
     os.path.join("raw_data_etl", "fetch_game_data.py"),
     os.path.join("raw_data_etl", "fetch_team_data.py"),
-    os.path.join("raw_data_etl", "fetch_player_data.py")
+    os.path.join("raw_data_etl", "fetch_player_data.py"),
 ]
 
 # iterate through all the paths and execute them

@@ -18,7 +18,7 @@ from schemas_and_starting_scripts.raw_player_tables import (
 from tqdm import tqdm
 
 # check for season name value
-if 'season_name' not in globals():
+if "season_name" not in globals():
     season_name = int(input("Which season do you want to pull data? "))
 
 print(f"[player_etl] Pulling player data for season: {season_name}")
@@ -93,7 +93,9 @@ action_types = [
 ]
 
 if player_ga_data_present:
-    cursor.sql(f"DELETE FROM kicking_dev.raw.player_goals_added WHERE season_name = {season_name}")
+    cursor.sql(
+        f"DELETE FROM kicking_dev.raw.player_goals_added WHERE season_name = {season_name}"
+    )
     print("[player etl] Deleted records from raw.player_goals_added")
 
 for action_type in action_types:
@@ -116,7 +118,7 @@ for action_type in action_types:
     cursor.sql("INSERT INTO raw.player_goals_added SELECT * FROM player_ga_data")
     print(
         f"[player_etl] Inserted {len(player_ga_data):,} rows into player GA data for {action_type}"
-        )
+    )
 
 
 # player xg
@@ -126,7 +128,9 @@ player_xg_data_present = check_for_existing_data(
 )
 
 if player_xg_data_present:
-    cursor.sql(f"DELETE FROM kicking_dev.raw.player_xg WHERE season_name = {season_name}")
+    cursor.sql(
+        f"DELETE FROM kicking_dev.raw.player_xg WHERE season_name = {season_name}"
+    )
     print("[player_etl] Deleted records from raw.player_xg")
 
 player_xg_data = asa_client.get_player_xgoals(
@@ -147,7 +151,9 @@ player_xpass_data_present = check_for_existing_data(
 )
 
 if player_xpass_data_present:
-    cursor.sql(f"DELETE FROM kicking_dev.raw.player_xpass WHERE season_name = {season_name}")
+    cursor.sql(
+        f"DELETE FROM kicking_dev.raw.player_xpass WHERE season_name = {season_name}"
+    )
     print("[player_etl] Deleted from raw.player_xpass")
 
 player_xpass_data = asa_client.get_player_xpass(
@@ -183,7 +189,9 @@ goalie_xg_data_present = check_for_existing_data(
 )
 
 if goalie_xg_data_present:
-    cursor.sql(f"DELETE FROM kicking_dev.raw.goalie_xg WHERE season_name = {season_name}")
+    cursor.sql(
+        f"DELETE FROM kicking_dev.raw.goalie_xg WHERE season_name = {season_name}"
+    )
     print("[player_etl] Deleted records from raw.goalie_xg")
 
 goalie_xg_data = asa_client.get_goalkeeper_xgoals(
@@ -203,7 +211,9 @@ goalie_ga_data_present = check_for_existing_data(
 )
 
 if goalie_ga_data_present:
-    cursor.sql(f"DELETE FROM kicking_dev.raw.goalie_goals_added WHERE season_name = {season_name}")
+    cursor.sql(
+        f"DELETE FROM kicking_dev.raw.goalie_goals_added WHERE season_name = {season_name}"
+    )
     print("[player_etl] Deleted records from raw.goalie_g+")
 
 goalie_ga_data_present = asa_client.get_goalkeeper_goals_added(

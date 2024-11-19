@@ -20,7 +20,7 @@ from utils import (
 from tqdm import tqdm
 
 # check for season name value
-if 'season_name' not in globals():
+if "season_name" not in globals():
     season_name = int(input("Which season do you want to pull data? "))
 
 print(f"[teams_etl] Pulling team data for season: {season_name}")

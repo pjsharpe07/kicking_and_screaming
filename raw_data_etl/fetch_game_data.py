@@ -17,7 +17,7 @@ path_to_database = os.path.join(os.getcwd(), "data", "kicking_dev.db")
 os.makedirs(os.path.dirname(path_to_database), exist_ok=True)
 
 # check for season name value
-if 'season_name' not in globals():
+if "season_name" not in globals():
     season_name = int(input("Which season do you want to pull data? "))
 
 print(f"[games_etl] Pulling game data for season: {season_name}")
