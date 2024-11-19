@@ -33,7 +33,7 @@ print("[games_etl] games table created/exists")
 cursor.execute(game_xg_table)
 print("[games_etl] xg table created")
 cursor.execute(stadium_table)
-print("[games_etl] data created")
+print("[games_etl] stadium data created")
 
 # fetch raw data from asa
 
