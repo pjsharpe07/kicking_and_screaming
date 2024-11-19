@@ -10,8 +10,31 @@ SELECT stand.team_id
 , xg.xgoal_diff_rank
 , gplus.team_gplus_rank
 , gplus.avg_gplus_rank
+, gplus_piv.claiming_gplus_for_rank
+, gplus_piv.claiming_gplus_against_rank
+, gplus_piv.claiming_gplus_diff_rank
+, gplus_piv.dribbling_gplus_for_rank
+, gplus_piv.dribbling_gplus_against_rank
+, gplus_piv.dribbling_gplus_diff_rank
+, gplus_piv.fouling_gplus_for_rank
+, gplus_piv.fouling_gplus_against_rank
+, gplus_piv.fouling_gplus_diff_rank
+, gplus_piv.interrupting_gplus_for_rank
+, gplus_piv.interrupting_gplus_against_rank
+, gplus_piv.interrupting_gplus_diff_rank
+, gplus_piv.passing_gplus_for_rank
+, gplus_piv.passing_gplus_against_rank
+, gplus_piv.passing_gplus_diff_rank
+, gplus_piv.receiving_gplus_for_rank
+, gplus_piv.receiving_gplus_against_rank
+, gplus_piv.receiving_gplus_diff_rank
+, gplus_piv.shooting_gplus_for_rank
+, gplus_piv.shooting_gplus_against_rank
+, gplus_piv.shooting_gplus_diff_rank
 FROM {{ ref('standings') }} stand
 LEFT JOIN {{ ref('team_xg_agg') }} xg
 ON stand.team_id = xg.team_id
 LEFT JOIN {{ ref('team_gplus_agg') }} gplus
 ON stand.team_id = gplus.team_id
+LEFT JOIN {{ ref('team_gplus_pivot') }} gplus_piv
+ON stand.team_id = gplus_piv.team_id

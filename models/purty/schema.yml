@@ -34,6 +34,17 @@ models:
         data_tests:
           - not_null
 
+  - name: team_gplus_pivot
+    description: "Team gplus data aggregated and ranked by each type"
+    columns:
+      - name: team_id
+        data_tests:
+          - not_null
+
+      - name: season_name
+        data_tests:
+          - not_null
+
   - name: team_xg_agg
     description: "Aggregated team expected goals data. Note that this comes almost complete via the ASA api"
     columns:
