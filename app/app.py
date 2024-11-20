@@ -11,13 +11,15 @@ con = duckdb.connect(database=path_to_database, read_only=True)
 st.set_page_config(layout="wide")
 st.title("Exploring some ASA Data For MLS")
 
-with st.expander('About the data'):
-    st.write("""This data is pulled from the ASA API and is just for me!
+with st.expander("About the data"):
+    st.write(
+        """This data is pulled from the ASA API and is just for me!
 You have some options to choose from:
 1. Rankings - league and conference rankings with statistics and rankings
 2. Team Analysis - A lot of numbers at a team level
 3. Player Data - A lot of numbers at a player level
-""")
+"""
+    )
 
 ###########################################
 ######### Set up user choices #############
@@ -48,8 +50,7 @@ current_table = user_parent_dictionary.get(user_table_choice)
 
 if user_parent_choice != "player data":
 
-    st.write('Do you want to filter teams? If so, which ones?')
-
+    st.write("Do you want to filter teams? If so, which ones?")
 
     col_a1, col_a2, col_a3 = st.columns(3)
 
@@ -59,31 +60,25 @@ if user_parent_choice != "player data":
     ORDER BY team_name
     """
 
-    teams = [
-        x[0] for x in
-        con.execute(distinct_teams_query).fetchall()
-    ]
+    teams = [x[0] for x in con.execute(distinct_teams_query).fetchall()]
 
     with col_a1:
         use_filters = st.selectbox("Filter Results?", [True, False])
 
-    with col_a2: 
-        team_one = st.selectbox('Team One', teams)
+    with col_a2:
+        team_one = st.selectbox("Team One", teams)
 
     with col_a3:
         second_team_list = [x for x in teams if x != team_one]
         team_two = st.selectbox("Team Two", second_team_list)
 
-where_clause = (
-    f"WHERE team_name IN ('{team_one}', '{team_two}')" if use_filters
-    else ""
-)
+where_clause = f"WHERE team_name IN ('{team_one}', '{team_two}')" if use_filters else ""
 
 # ##########################################
 # ########### data preview #################
 # ##########################################
 
-st.subheader('Table Data')
+st.subheader("Table Data")
 
 
 main_table_query = f"""
@@ -101,16 +96,14 @@ st.write(main_table_df)
 # ############# charts #####################
 # ##########################################
 
-st.subheader('Charts')
+st.subheader("Charts")
 
 distinct_teams_query = """
 DESCRIBE SELECT * EXCLUDE(team_id, team_name, conference, total_points, points_per_game, season_name)
 FROM kicking_dev.purty.aggregate_stats_with_points
 """
 
-compare_values = [x[0] for x in
-                  con.execute(distinct_teams_query).fetchall()
-                ]
+compare_values = [x[0] for x in con.execute(distinct_teams_query).fetchall()]
 
 x_value = st.selectbox("Which value do you want to compare?", compare_values)
 
@@ -129,10 +122,15 @@ FROM purty.aggregate_stats_with_points
 x_lower_bound, x_upper_boud = con.execute(query).fetchone()
 
 
-chart = alt.Chart(chart_table_df).mark_circle().encode(
-    x = alt.X(x_value, scale=alt.Scale(domain=(x_lower_bound, x_upper_boud))),
-    y = "points_per_game",
-    color = "conference",
-).interactive()
+chart = (
+    alt.Chart(chart_table_df)
+    .mark_circle()
+    .encode(
+        x=alt.X(x_value, scale=alt.Scale(domain=(x_lower_bound, x_upper_boud))),
+        y="points_per_game",
+        color="conference",
+    )
+    .interactive()
+)
 
 st.altair_chart(chart, theme="streamlit", use_container_width=True)
