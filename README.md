@@ -51,6 +51,15 @@ SELECT *
 FROM kicking_dev.purty.standings
 ```
 
+
+#### Streamlit App
+
+There is a basic data app that is built with [streamlit](https://streamlit.io/).
+
+You can find the application code in [the app folder](./app/) and the config in the [.streamlit](.streamlit/) folder
+
+Start the app from the root directory with `streamlit run app/app.py`.
+
 ### Contributing
 
 Please make feature branches or PR's. Happy coding!
