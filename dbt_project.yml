@@ -9,7 +9,7 @@ model-paths: ["models"]
 test-paths: ["tests"]
 # seed-paths: ["seeds"]
 macro-paths: ["macros"]
-# snapshot-paths: ["snapshots"]
+snapshot-paths: ["snapshots"]
 
 clean-targets:         # directories to be removed by `dbt clean`
   - "target"
@@ -30,3 +30,8 @@ models:
     purty:
       +materialized: table
       +schema: purty
+
+snapshots:
+  kicking_and_screaming:
+    fact_models:
+      +materialized: snapshot
