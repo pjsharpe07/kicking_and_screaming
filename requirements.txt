@@ -1,6 +1,6 @@
 duckdb==1.0.*
-itscalledsoccer==1.2.*
-pandas==2.0.*
+itscalledsoccer==1.3.*
+pandas~=2.0
 tqdm==4.65.*
 dbt-duckdb==1.8.*
 streamlit==1.40.*
