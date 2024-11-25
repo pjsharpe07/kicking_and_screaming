@@ -15,7 +15,6 @@ select
   , season_name
   , conference
   , games_played
-  , games_played
   , shots_for
   , shots_against
   , goals_for
