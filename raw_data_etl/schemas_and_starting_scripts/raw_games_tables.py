@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS raw.games (
 	attendance HUGEINT,
 	knockout_game BOOLEAN,
 	last_updated_utc TIMESTAMPTZ,
+    extra_time FLOAT,
     penalties FLOAT,
     home_penalties REAL,
     away_penalties REAL

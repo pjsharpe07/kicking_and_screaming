@@ -19,7 +19,7 @@ teams.team_id
 , ROW_NUMBER() OVER(PARTITION BY teams.conference, tg.season_name ORDER BY avg_gplus_per_game DESC) AS avg_gplus_conf_rank
 FROM gplus_agg tg
 LEFT JOIN {{ ref('teams_clean') }} teams
-ON tg.team_id = teams.team_id
+	ON tg.team_id = teams.team_id
 LEFT JOIN {{ ref('standings') }} stand
-ON tg.team_id = stand.team_id
-ORDER BY avg_gplus_per_game DESC
+	ON tg.team_id = stand.team_id
+	AND tg.season_name = stand.season_name

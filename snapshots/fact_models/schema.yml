@@ -1,0 +1,6 @@
+version: 2
+
+snapshots:
+  - name: team_gplus_agg_snapshot
+
+  - name: team_xg_agg_snapshot
