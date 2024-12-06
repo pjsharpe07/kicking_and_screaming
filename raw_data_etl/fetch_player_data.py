@@ -5,6 +5,7 @@ from utils import (
     check_for_existing_data,
     create_schema_if_not_exists,
     delete_matching_pkeys_stmt,
+    validate_source_and_db_columns,
 )
 from schemas_and_starting_scripts.raw_player_tables import (
     player_table,
@@ -60,7 +61,9 @@ player_data_present = check_for_existing_data(
 )
 
 player_data = asa_client.get_players(leagues="mls")
-
+player_data = validate_source_and_db_columns(
+    source_df=player_data, target_table="players", cursor=cursor
+)
 
 if player_data_present:
     num_matching_keys, delete_stmt = delete_matching_pkeys_stmt(
@@ -74,6 +77,7 @@ if player_data_present:
 cursor.sql("INSERT INTO raw.players SELECT * FROM player_data")
 print(f"[player_etl] Inserted {len(player_data):,} rows into players table")
 
+del player_data
 
 # players ga
 
@@ -108,17 +112,23 @@ for action_type in action_types:
         minimum_minutes=427,  # ~1/4 of playable minutes thus far
     )
 
+    # now unnest the "data" column
+    player_ga_data["data"] = player_ga_data["data"].apply(lambda x: x[0])
+
     # manually add the season name column
     player_ga_data.insert(1, "season_name", season_name)
 
-    # now unnest the "data" column
-    player_ga_data["data"] = player_ga_data["data"].apply(lambda x: x[0])
+    player_ga_data = validate_source_and_db_columns(
+        source_df=player_ga_data, target_table="player_goals_added", cursor=cursor
+    )
 
     # now insert
     cursor.sql("INSERT INTO raw.player_goals_added SELECT * FROM player_ga_data")
     print(
         f"[player_etl] Inserted {len(player_ga_data):,} rows into player GA data for {action_type}"
     )
+
+del player_ga_data
 
 
 # player xg
@@ -139,10 +149,14 @@ player_xg_data = asa_client.get_player_xgoals(
 
 # manually add the season name variable
 player_xg_data.insert(1, "season_name", season_name)
+player_xg_data = validate_source_and_db_columns(
+    source_df=player_xg_data, target_table="player_xg", cursor=cursor
+)
 
 cursor.sql("INSERT INTO raw.player_xg SELECT * FROM player_xg_data")
 print(f"[player_etl] Inserted {len(player_xg_data):,} rows for player xg")
 
+del player_xg_data
 
 # player xpass
 
@@ -162,8 +176,14 @@ player_xpass_data = asa_client.get_player_xpass(
 
 player_xpass_data.insert(1, "season_name", season_name)
 
+player_xpass_data = validate_source_and_db_columns(
+    source_df=player_xpass_data, target_table="player_xpass", cursor=cursor
+)
+
 cursor.sql("INSERT INTO raw.player_xpass SELECT * FROM player_xpass_data")
 print(f"[player_etl] Inserted {len(player_xpass_data):,} rows for player xpass")
+
+del player_xpass_data
 
 # player salaries
 
@@ -178,8 +198,13 @@ if player_salary_data_present:
     )
 else:
     salary_data = asa_client.get_player_salaries(leagues="mls")
+    salary_data = validate_source_and_db_columns(
+        source_df=salary_data, target_table="player_salaries", cursor=cursor
+    )
     cursor.sql("INSERT INTO raw.player_salaries SELECT * FROM salary_data")
     print("Inserted data for player salary")
+
+    del salary_data
 
 
 # goalie xg data
@@ -200,9 +225,14 @@ goalie_xg_data = asa_client.get_goalkeeper_xgoals(
 
 goalie_xg_data.insert(1, "season_name", season_name)
 
+goalie_xg_data = validate_source_and_db_columns(
+    source_df=goalie_xg_data, target_table="goalie_xg", cursor=cursor
+)
+
 cursor.sql("INSERT INTO raw.goalie_xg SELECT * FROM goalie_xg_data")
 print(f"[player_etl] Inserted {len(goalie_xg_data):,} rows into goalie xg data")
 
+del goalie_xg_data
 
 # goalie ga data
 
@@ -216,12 +246,12 @@ if goalie_ga_data_present:
     )
     print("[player_etl] Deleted records from raw.goalie_g+")
 
-goalie_ga_data_present = asa_client.get_goalkeeper_goals_added(
+goalie_ga_data = asa_client.get_goalkeeper_goals_added(
     leagues="mls", season_name="2024", split_by_games=True
 )
 
-for i in tqdm(range(len(goalie_ga_data_present)), "Inserting goalie ga data"):
-    row = goalie_ga_data_present.iloc[i]
+for i in tqdm(range(len(goalie_ga_data)), "Inserting goalie ga data"):
+    row = goalie_ga_data.iloc[i]
 
     player_id = row["player_id"]
     game_id = row["game_id"]
@@ -239,3 +269,5 @@ for i in tqdm(range(len(goalie_ga_data_present)), "Inserting goalie ga data"):
         cursor.sql(insert_stmt)
 
 print("Inserted data for goalie g+ data")
+
+del goalie_ga_data

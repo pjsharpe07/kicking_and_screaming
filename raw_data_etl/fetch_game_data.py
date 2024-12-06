@@ -9,6 +9,7 @@ from schemas_and_starting_scripts.raw_games_tables import (
 from utils import (
     check_for_existing_data,
     create_schema_if_not_exists,
+    validate_source_and_db_columns,
 )
 
 path_to_database = os.path.join(os.getcwd(), "data", "kicking_dev.db")
@@ -47,6 +48,9 @@ game_data_present = check_for_existing_data(
 )
 
 game_data = asa_client.get_games(leagues="mls", seasons=season_name)
+game_data = validate_source_and_db_columns(
+    source_df=game_data, target_table="games", cursor=cursor
+)
 
 if game_data_present and len(game_data) > 0:
 
@@ -65,10 +69,11 @@ if game_data_present and len(game_data) > 0:
 cursor.sql("INSERT INTO raw.games SELECT * FROM game_data")
 print(f"[games_etl] Inserted {len(game_data):,} rows into game data")
 
+del game_data
 
 ### get_game_xgoals
 game_xg_data_present = check_for_existing_data(
-    schema="raw", table_name="games", cursor=cursor
+    schema="raw", table_name="game_xg", cursor=cursor
 )
 
 # filter game ids if we already have it
@@ -88,6 +93,9 @@ if game_xg_data_present and len(game_xg_data) > 0:
 
     # manually add the season name variable
     game_xg_data.insert(2, "season_name", season_name)
+    game_xg_data = validate_source_and_db_columns(
+        source_df=game_xg_data, target_table="game_xg", cursor=cursor
+    )
 
     cursor.sql(f"DELETE FROM raw.game_xg WHERE season_name = {season_name}")
     print("[games_etl] Deleted data from raw.game_xg")
@@ -95,6 +103,7 @@ if game_xg_data_present and len(game_xg_data) > 0:
 cursor.sql("INSERT INTO raw.game_xg SELECT * FROM game_xg_data")
 print(f"[games_etl] Inserted {len(game_xg_data):,} rows into game_xg table")
 
+del game_xg_data
 
 ### get_stadia
 
@@ -110,5 +119,10 @@ if stadium_data_present:
     )
 else:
     stadia_data = asa_client.get_stadia(leagues="mls")
+    stadia_data = validate_source_and_db_columns(
+        source_df=stadia_data, target_table="stadiums", cursor=cursor
+    )
     cursor.sql("INSERT INTO raw.stadiums SELECT * FROM stadia_data")
     print(f"[games_etl] Inserted {len(stadia_data):,} rows for stadiums")
+
+    del stadia_data

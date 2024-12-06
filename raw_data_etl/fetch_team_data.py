@@ -16,6 +16,7 @@ from utils import (
     create_schema_if_not_exists,
     filter_values_from_df,
     delete_matching_pkeys_stmt,
+    validate_source_and_db_columns,
 )
 from tqdm import tqdm
 
@@ -112,6 +113,7 @@ if conf_data_present:
 cursor.sql("INSERT INTO raw.team_conferences SELECT * FROM conference_df")
 print(f"[teams_etl] Inserted {len(conference_df):,} into raw.team_conferences")
 
+del conference_df
 
 # now start fetching the raw data from ASA
 
@@ -122,6 +124,13 @@ team_data_present = check_for_existing_data(
 )
 
 team_data = asa_client.get_teams(leagues="mls")
+
+# team data has been renamed from league to competition
+team_data.rename(columns={"competition" : "league"}, inplace=True)
+
+team_data = validate_source_and_db_columns(
+    source_df=team_data, target_table="teams", cursor=cursor
+)
 
 # only add new teams here
 if team_data_present:
@@ -135,6 +144,7 @@ if team_data_present:
 cursor.sql("INSERT INTO raw.teams SELECT * FROM team_data")
 print(f"[teams_etl] Inserted {len(team_data):,} into teams table")
 
+del team_data
 
 # team goals added -- we have to unnest the data for this one
 
@@ -184,14 +194,19 @@ team_salary_data = asa_client.get_team_salaries(
     leagues="mls", split_by_teams=True, split_by_seasons=True
 )
 
+team_salary_data = validate_source_and_db_columns(
+    source_df=team_salary_data, target_table="team_salaries", cursor=cursor
+)
+
 if team_salary_data_present and len(team_salary_data) > 0:
-    cursor.sql("DELETE FROM kicking_dev.raw.team_salaries")
+    cursor.sql("DELETE FROM raw.team_salaries")
     print("[teams_etl] Deleted data for team_salaries")
 
 
 cursor.sql("INSERT INTO raw.team_salaries SELECT * FROM team_salary_data")
 print(f"[teams_etl] Inserted {len(team_salary_data):,} rows into salary table")
 
+del team_salary_data
 
 # team xg data
 team_xg_data_present = check_for_existing_data(
@@ -200,14 +215,18 @@ team_xg_data_present = check_for_existing_data(
 
 team_xg_data = asa_client.get_team_xgoals(leagues="mls", season_name=season_name)
 
-
 if team_xg_data_present and len(team_xg_data) > 0:
     cursor.sql(f"DELETE FROM kicking_dev.raw.team_xg WHERE season_name={season_name}")
     print("[teams_etl] Deleted data for team_xg")
 
 team_xg_data.insert(1, "season_name", season_name)
+team_xg_data = validate_source_and_db_columns(
+    source_df=team_xg_data, target_table="team_xg", cursor=cursor
+)
 cursor.sql("INSERT INTO raw.team_xg SELECT * FROM team_xg_data")
 print(f"[teams_etl] Inserted {len(team_xg_data):,} rows into team xg table")
+
+del team_xg_data
 
 # team xpass data
 
@@ -217,15 +236,19 @@ team_xpass_data_present = check_for_existing_data(
 
 team_xpass_data = asa_client.get_team_xpass(leagues="mls", season_name=season_name)
 
-
 if team_xpass_data_present and len(team_xpass_data) > 0:
     cursor.sql("DELETE FROM kicking_dev.raw.team_xpass")
     print("[teams_etl] Deleted data from team_xpass table ")
 
 team_xpass_data.insert(1, "season_name", season_name)
+team_xpass_data = validate_source_and_db_columns(
+    source_df=team_xpass_data, target_table="team_xpass", cursor=cursor
+)
+
 cursor.sql("INSERT INTO raw.team_xpass SELECT * FROM team_xpass_data")
 print(f"[teams_etl] Inserted {len(team_xpass_data):,} rows into team_xpass table")
 
+del team_xpass_data
 
 # manager data
 
@@ -234,6 +257,9 @@ manager_data_present = check_for_existing_data(
 )
 
 manager_data = asa_client.get_managers(leagues="mls")
+manager_data = validate_source_and_db_columns(
+    source_df=manager_data, target_table="managers", cursor=cursor
+)
 
 if manager_data_present:
 
@@ -248,3 +274,5 @@ if manager_data_present:
 
 cursor.sql("INSERT INTO raw.managers SELECT * FROM manager_data")
 print(f"[teams_etl] Inserted {len(manager_data):,} rows into managers table")
+
+del manager_data
