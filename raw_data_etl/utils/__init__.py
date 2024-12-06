@@ -104,3 +104,48 @@ def delete_matching_pkeys_stmt(
     WHERE {primary_key_column} IN ('{in_clause}')
     """
     return len(unique_values), delete_stmt
+
+
+def validate_source_and_db_columns(
+    source_df: DataFrame, target_table: str, cursor: DuckDBPyConnection
+) -> DataFrame:
+    """
+    Identifies discrepancies in columns between source and target
+    Prints warnings for differences.
+    Extra columns in the source are dropped
+
+    Args:
+        source_df: the df returned from ASA api
+        target_table: the string of the target table
+        cursor: The instantiated cursor for duckdb
+    """
+
+    # first fetch the columns of both and turn into lists
+    sql = f"DESCRIBE SELECT * FROM raw.{target_table}"
+    db_columns = list(cursor.sql(sql).fetchdf()["column_name"].unique())
+
+    source_columns = list(source_df.columns)
+
+    # now identify and print any columns missing from source
+    missing_from_source = [x for x in db_columns if x not in source_columns]
+    if missing_from_source:
+        print("!" * 150)
+        print(
+            f"Warning. The following columns are not found in source api when loading to {target_table} table."
+        )
+        print(", ".join(missing_from_source))
+        print("!" * 150)
+
+    # now identify and print any columns missing from db - warn AND drop
+    missing_from_db = [x for x in source_columns if x not in db_columns]
+    if missing_from_db:
+        print("!" * 150)
+        print(
+            f"Warning! These columns are missing from {target_table} table and will be dropped before loading"
+        )
+        print(", ".join(missing_from_db))
+        print("!" * 150)
+        # drop them here
+        source_df.drop(missing_from_db, axis=1, inplace=True)
+
+    return source_df
