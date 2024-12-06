@@ -126,7 +126,7 @@ team_data_present = check_for_existing_data(
 team_data = asa_client.get_teams(leagues="mls")
 
 # team data has been renamed from league to competition
-team_data.rename(columns={"competition" : "league"}, inplace=True)
+team_data.rename(columns={"competition": "league"}, inplace=True)
 
 team_data = validate_source_and_db_columns(
     source_df=team_data, target_table="teams", cursor=cursor
