@@ -1,5 +1,8 @@
 from duckdb import DuckDBPyConnection
 from pandas import DataFrame
+import shutil
+import os
+import sys
 
 
 def check_for_existing_data(
@@ -108,11 +111,13 @@ def delete_matching_pkeys_stmt(
 
 def validate_source_and_db_columns(
     source_df: DataFrame, target_table: str, cursor: DuckDBPyConnection
-) -> DataFrame:
+):
     """
     Identifies discrepancies in columns between source and target
     Prints warnings for differences.
-    Extra columns in the source are dropped
+    Exits the program if missing data found.
+    Otherwise returns the source_df. Why?
+    This gives us flexibility in adding to the program later
 
     Args:
         source_df: the df returned from ASA api
@@ -129,23 +134,50 @@ def validate_source_and_db_columns(
     # now identify and print any columns missing from source
     missing_from_source = [x for x in db_columns if x not in source_columns]
     if missing_from_source:
-        print("!" * 150)
+        print("*" * 100)
         print(
-            f"Warning. The following columns are not found in source api when loading to {target_table} table."
+            f"Warning. The following columns are not found in source when loading to {target_table} table."
         )
         print(", ".join(missing_from_source))
-        print("!" * 150)
+        print("*" * 100)
 
     # now identify and print any columns missing from db - warn AND drop
     missing_from_db = [x for x in source_columns if x not in db_columns]
     if missing_from_db:
-        print("!" * 150)
+        print("*" * 100)
         print(
-            f"Warning! These columns are missing from {target_table} table and will be dropped before loading"
+            f"Warning! These columns are missing from {target_table} table. You should go investigate."
         )
         print(", ".join(missing_from_db))
-        print("!" * 150)
-        # drop them here
-        source_df.drop(missing_from_db, axis=1, inplace=True)
+        print("*" * 100)
+        
+    # exit the program gracefully if either are broken
+    if missing_from_source or missing_from_db:
+        sys.exit(1)
 
     return source_df
+
+
+
+def copy_file_replace(source : str, destination : str) -> bool:
+    """Copies a file from source to destination, replacing if it exists
+    
+    Args:
+        source: the file path you want to copy the data
+        destination: the file path where the data exists
+    """
+
+    # return None if there is no good data
+    if not os.path.exists(source):
+        return False
+
+    # create hte directory
+    os.makedirs(os.path.dirname(destination), exist_ok=True)
+    
+    # remove the file if it exists
+    if os.path.exists(destination):
+        os.remove(destination)
+
+    shutil.copy2(source, destination)
+    
+    return True
