@@ -1,3 +1,3 @@
 SELECT *
 FROM {{ ref('player_xg_agg') }}
-QUALIFY 1 = ROW_NUMBER() OVER(PARTITION BY player_id ORDER BY season_name, matchday DESC)
+QUALIFY 1 = ROW_NUMBER() OVER(PARTITION BY player_id ORDER BY season_name DESC, matchday DESC)

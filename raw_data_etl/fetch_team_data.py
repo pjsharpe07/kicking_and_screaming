@@ -86,6 +86,7 @@ team_conferences = {
     "Houston Dynamo FC": "West",
     "Sporting Kansas City": "West",
     "Inter Miami CF": "East",
+    "San Diego FC": "West",
 }
 
 # pretty gross way to do this, but some existing was already live

@@ -22,11 +22,8 @@ CREATE TABLE IF NOT EXISTS raw.games (
 	matchday INTEGER,
 	attendance HUGEINT,
 	knockout_game BOOLEAN,
+    status STRING,
 	last_updated_utc TIMESTAMPTZ,
-    extra_time FLOAT,
-    penalties FLOAT,
-    home_penalties REAL,
-    away_penalties REAL
 )
 """
 

@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS raw.player_xg (
 	primary_assists INTEGER,
 	xassists REAL,
 	primary_assists_minus_xassists REAL,
+    goals_plus_primary_assists INT,
 	xgoals_plus_xassists REAL,
 	points_added REAL,
 	xpoints_added REAL,

@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS raw.team_salaries (
 
 team_xg_table = """
 CREATE TABLE IF NOT EXISTS raw.team_xg (
-	team_id VARCHAR PRIMARY KEY,
+	team_id VARCHAR,
     season_name INTEGER,
 	count_games INTEGER,
 	shots_for INTEGER,
