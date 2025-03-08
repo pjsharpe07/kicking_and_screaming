@@ -11,6 +11,8 @@ SELECT stand.team_id
 , gplus.avg_gplus_per_game
 FROM {{ ref('standings') }} stand
 LEFT JOIN {{ ref('team_xg_agg') }} xg
-ON stand.team_id = xg.team_id
+    ON stand.team_id = xg.team_id
+    AND stand.season_name = xg.season_name
 LEFT JOIN {{ ref('team_gplus_agg') }} gplus
-ON stand.team_id = gplus.team_id
+    ON stand.team_id = gplus.team_id
+    AND stand.season_name = gplus.season_name
