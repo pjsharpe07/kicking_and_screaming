@@ -52,7 +52,7 @@ if user_parent_choice != "player data":
 
     st.write("Do you want to filter teams? If so, which ones?")
 
-    col_a1, col_a2, col_a3 = st.columns(3)
+    col_a1, col_a2, col_a3, col_a4 = st.columns(4)
 
     distinct_teams_query = """
     SELECT DISTINCT team_name
@@ -60,7 +60,13 @@ if user_parent_choice != "player data":
     ORDER BY team_name
     """
 
+    distinct_year_query = """
+    SELECT DISTINCT season_name
+    FROM purty.league_rankings
+    """
+
     teams = [x[0] for x in con.execute(distinct_teams_query).fetchall()]
+    years = [x[0] for x in con.execute(distinct_year_query).fetchall()]
 
     with col_a1:
         use_filters = st.selectbox("Filter Results?", [True, False])
@@ -71,8 +77,19 @@ if user_parent_choice != "player data":
     with col_a3:
         second_team_list = [x for x in teams if x != team_one]
         team_two = st.selectbox("Team Two", second_team_list)
+    
+    with col_a4:
+        year = st.selectbox("Which season?", years)
 
-where_clause = f"WHERE team_name IN ('{team_one}', '{team_two}')" if use_filters else ""
+    if use_filters:
+        where_clause = f"""
+        WHERE team_name IN ('{team_one}', '{team_two}')
+        AND season_name = {year}
+        """
+    else:
+        where_clause = ""
+else:
+    where_clause = ""
 
 # ##########################################
 # ########### data preview #################
