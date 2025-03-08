@@ -77,7 +77,7 @@ if user_parent_choice != "player data":
     with col_a3:
         second_team_list = [x for x in teams if x != team_one]
         team_two = st.selectbox("Team Two", second_team_list)
-    
+
     with col_a4:
         year = st.selectbox("Which season?", years)
 

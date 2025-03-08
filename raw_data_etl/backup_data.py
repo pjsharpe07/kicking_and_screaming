@@ -11,7 +11,7 @@ path_to_backup = os.path.join(os.getcwd(), "data", "backup", f"kicking_dev_{toda
 
 # copy data
 # will tell us if the backup was successful or not
-copy_success = copy_file_replace(source = path_to_database, destination=path_to_backup)
+copy_success = copy_file_replace(source=path_to_database, destination=path_to_backup)
 
 if copy_success:
     print(f"Copied data from {path_to_database} to {path_to_backup}")

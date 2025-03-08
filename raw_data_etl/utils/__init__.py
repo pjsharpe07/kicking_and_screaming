@@ -150,7 +150,7 @@ def validate_source_and_db_columns(
         )
         print(", ".join(missing_from_db))
         print("*" * 100)
-        
+
     # exit the program gracefully if either are broken
     if missing_from_source or missing_from_db:
         sys.exit(1)
@@ -158,10 +158,9 @@ def validate_source_and_db_columns(
     return source_df
 
 
-
-def copy_file_replace(source : str, destination : str) -> bool:
+def copy_file_replace(source: str, destination: str) -> bool:
     """Copies a file from source to destination, replacing if it exists
-    
+
     Args:
         source: the file path you want to copy the data
         destination: the file path where the data exists
@@ -173,11 +172,11 @@ def copy_file_replace(source : str, destination : str) -> bool:
 
     # create hte directory
     os.makedirs(os.path.dirname(destination), exist_ok=True)
-    
+
     # remove the file if it exists
     if os.path.exists(destination):
         os.remove(destination)
 
     shutil.copy2(source, destination)
-    
+
     return True
