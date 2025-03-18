@@ -75,7 +75,6 @@ if user_parent_choice != "player data":
     """
 
     teams = [x[0] for x in con.execute(distinct_teams_query).fetchall()]
-    
 
     with col_a1:
         use_filters = st.selectbox("Filter To Specific Teams?", [True, False])
@@ -87,13 +86,12 @@ if user_parent_choice != "player data":
         second_team_list = [x for x in teams if x != team_one]
         team_two = st.selectbox("Team Two", second_team_list)
 
-
     if use_filters:
         where_clause = f"""
         WHERE team_name IN ('{team_one}', '{team_two}')
         AND season_name = {year}
         """
-    
+
     # we want to filter by year no matter what
     else:
         where_clause = f"WHERE season_name = {year}"
