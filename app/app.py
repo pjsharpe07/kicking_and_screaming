@@ -27,7 +27,10 @@ You have some options to choose from:
 
 st.subheader("What data do you want to see?")
 
-user_choice_col_1, user_choice_col_2 = st.columns(2)
+
+# we organized all of these tables in the constants file
+# so we allow the user to filter to what they want to see
+user_choice_col_1, user_choice_col_2, user_choice_col_3 = st.columns([0.4, 0.4, 0.2])
 
 initial_user_option = list(user_choice_dict.keys())
 
@@ -39,6 +42,17 @@ user_table_choices = list(user_parent_dictionary.keys())
 
 with user_choice_col_2:
     user_table_choice = st.selectbox("Which table?", user_table_choices)
+
+# establish the years
+with user_choice_col_3:
+    distinct_year_query = """
+    SELECT DISTINCT season_name
+    FROM purty.league_rankings
+    """
+
+    years = [x[0] for x in con.execute(distinct_year_query).fetchall()]
+
+    year = st.selectbox("Which season?", years)
 
 current_table = user_parent_dictionary.get(user_table_choice)
 
@@ -52,7 +66,7 @@ if user_parent_choice != "player data":
 
     st.write("Do you want to filter teams? If so, which ones?")
 
-    col_a1, col_a2, col_a3, col_a4 = st.columns(4)
+    col_a1, col_a2, col_a3 = st.columns(3)
 
     distinct_teams_query = """
     SELECT DISTINCT team_name
@@ -60,16 +74,11 @@ if user_parent_choice != "player data":
     ORDER BY team_name
     """
 
-    distinct_year_query = """
-    SELECT DISTINCT season_name
-    FROM purty.league_rankings
-    """
-
     teams = [x[0] for x in con.execute(distinct_teams_query).fetchall()]
-    years = [x[0] for x in con.execute(distinct_year_query).fetchall()]
+    
 
     with col_a1:
-        use_filters = st.selectbox("Filter Results?", [True, False])
+        use_filters = st.selectbox("Filter To Specific Teams?", [True, False])
 
     with col_a2:
         team_one = st.selectbox("Team One", teams)
@@ -78,18 +87,18 @@ if user_parent_choice != "player data":
         second_team_list = [x for x in teams if x != team_one]
         team_two = st.selectbox("Team Two", second_team_list)
 
-    with col_a4:
-        year = st.selectbox("Which season?", years)
 
     if use_filters:
         where_clause = f"""
         WHERE team_name IN ('{team_one}', '{team_two}')
         AND season_name = {year}
         """
+    
+    # we want to filter by year no matter what
     else:
-        where_clause = ""
+        where_clause = f"WHERE season_name = {year}"
 else:
-    where_clause = ""
+    where_clause = f"WHERE season_name = {year}"
 
 # ##########################################
 # ########### data preview #################
