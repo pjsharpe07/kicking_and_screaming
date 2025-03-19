@@ -1,6 +1,6 @@
 import duckdb
 from itscalledsoccer.client import AmericanSoccerAnalysis
-import os
+from config import path_to_database
 from schemas_and_starting_scripts.raw_games_tables import (
     game_table,
     game_xg_table,
@@ -11,8 +11,7 @@ from utils import (
     create_schema_if_not_exists,
     validate_source_and_db_columns,
 )
-
-path_to_database = os.path.join(os.getcwd(), "data", "kicking_dev.db")
+import os
 
 # make the data directory if it doesn't exist
 os.makedirs(os.path.dirname(path_to_database), exist_ok=True)
