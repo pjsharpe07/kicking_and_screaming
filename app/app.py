@@ -3,10 +3,14 @@ import duckdb
 import os
 import altair as alt
 from app_constants import user_choice_dict
+import sys
+from pathlib import Path
 
-path_to_database = os.path.join(os.getcwd(), "data", "kicking_dev.db")
+# Add the project root to Python path to enable absolute imports
+sys.path.append(str(Path(__file__).parent.parent.resolve()))
+from raw_data_etl.config import path_to_database
+
 con = duckdb.connect(database=path_to_database, read_only=True)
-
 
 st.set_page_config(layout="wide")
 st.title("Exploring some ASA Data For MLS")

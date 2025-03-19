@@ -1,6 +1,6 @@
 import duckdb
 from itscalledsoccer.client import AmericanSoccerAnalysis
-import os
+from config import path_to_database
 from utils import (
     check_for_existing_data,
     create_schema_if_not_exists,
@@ -17,14 +17,13 @@ from schemas_and_starting_scripts.raw_player_tables import (
     goalie_ga_table,
 )
 from tqdm import tqdm
+import os
 
 # check for season name value
 if "season_name" not in globals():
     season_name = int(input("Which season do you want to pull data? "))
 
 print(f"[player_etl] Pulling player data for season: {season_name}")
-
-path_to_database = os.path.join(os.getcwd(), "data", "kicking_dev.db")
 
 # make the data directory if it doesn't exist
 os.makedirs(os.path.dirname(path_to_database), exist_ok=True)

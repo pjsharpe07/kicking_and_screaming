@@ -2,6 +2,7 @@ import duckdb
 from itscalledsoccer.client import AmericanSoccerAnalysis
 from pandas import DataFrame
 import os
+from config import path_to_database
 from schemas_and_starting_scripts.raw_teams_tables import (
     teams_table,
     team_conference_table,
@@ -25,9 +26,6 @@ if "season_name" not in globals():
     season_name = int(input("Which season do you want to pull data? "))
 
 print(f"[teams_etl] Pulling team data for season: {season_name}")
-
-
-path_to_database = os.path.join(os.getcwd(), "data", "kicking_dev.db")
 
 # make the data directory if it doesn't exist
 os.makedirs(os.path.dirname(path_to_database), exist_ok=True)

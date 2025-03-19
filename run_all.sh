@@ -12,4 +12,8 @@ python -u raw_data_etl/run_all.py &&
 # 3. build our models via dbt
 echo "Beginning to build our data model" &&
 dbt build
-$SHELL
+
+# Deactivate virtual environment if it was activated
+if [ -d ".venv" ]; then
+    deactivate
+fi
