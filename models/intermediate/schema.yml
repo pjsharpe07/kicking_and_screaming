@@ -29,4 +29,9 @@ models:
           - not_null
 
   - name: player_xg
-    description: "Player xg with game matchday and player name"
+    description: "Player xg with game matchday, player name, and team name"
+
+  - name: player_gplus
+    description: "Player gplus with game matchday, player name, and team name"
+
+    
