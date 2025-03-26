@@ -1,6 +1,8 @@
 SELECT xg.player_id
 , p.player_name
 , xg.season_name
+, xg.team_id
+, t.team_name
 , xg.game_id
 , g.matchday
 , xg.general_position
@@ -12,6 +14,8 @@ SELECT xg.player_id
 , xg.goals_minus_xgoals
 FROM {{ source('raw', 'player_xg') }} xg
 LEFT JOIN {{ source('raw', 'players') }} p
-ON xg.player_id = p.player_id 
+ON xg.player_id = p.player_id
+LEFT JOIN {{ source('raw', 'teams') }} t
+ON xg.team_id = t.team_id
 LEFT JOIN {{ source('raw', 'games') }} g
 ON xg.game_id = g.game_id

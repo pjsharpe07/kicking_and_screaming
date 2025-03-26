@@ -84,3 +84,7 @@ sources:
 
       - name: player_xg
         description: "One record per game and player_id"
+
+      - name: player_goals_added
+        description: "Player goals added for each game (6 action types per game)"
+        
