@@ -122,3 +122,21 @@ models:
       - name: player_id
         data_tests:
           - not_null
+
+  - name: player_gplus_agg
+    description: "Player gplus data. Unique per player, season, AND action type"
+    columns:
+      - name: player_id
+        data_tests:
+          - not_null
+      
+      - name: total_gplus
+        data_tests:
+          - not_null
+
+  - name: player_stats_agg
+    description: "Gplus and XG data for each player"
+    columns:
+      - name: player_id
+        data_tests:
+          - not_null
