@@ -124,41 +124,70 @@ st.write(main_table_df)
 # ############# charts #####################
 # ##########################################
 
+# metadata about the different charts
+# based on user input
+# then returns the table_name followed by the columns
+metric_data = {
+    "Team XG": {
+        "table_name": "team_xg_agg_snapshot",
+        "metric_columns": [
+            "goals_for",
+            "goals_against",
+            "goal_difference",
+            "xgoals_for",
+            "xgoals_against",
+            "xgoal_difference",
+        ],
+        "chart_title": "Team XG Over Games Played",
+    },
+    "Team Goals Added": {
+        "table_name": "team_gplus_agg_snapshot",
+        "metric_columns": ["total_gplus", "avg_gplus_per_game"],
+        "chart_title": "Team G+ Over Games Played",
+    },
+}
+
 st.subheader("Charts")
 
-distinct_teams_query = """
-DESCRIBE SELECT * EXCLUDE(team_id, team_name, conference, total_points, points_per_game, season_name)
-FROM kicking_dev.purty.aggregate_stats_with_points
+
+# fetch user metadata about the chart they want to view
+st.write("Filter to year, metric, and teams if you want")
+col_a1, col_a2, col_a3 = st.columns(3)
+
+with col_a1:
+    metric_year = st.selectbox("Which year?", years)
+
+with col_a2:
+    metric_table = st.selectbox("Which chart?", metric_data.keys())
+with col_a3:
+    metric = st.selectbox("Which metric?", metric_data[metric_table]["metric_columns"])
+
+
+#### get the filter for the teams
+filter_one, filter_two = st.columns(2)
+
+with filter_one:
+    first_team = st.selectbox("First Team", teams)
+
+with filter_two:
+    second_team_list = [x for x in teams if x != first_team]
+    second_team = st.selectbox("Second Team", second_team_list)
+
+# now start fetching the metadata about each
+chart_data = metric_data[metric_table]
+table_name = chart_data["table_name"]
+chart_title = chart_data["chart_title"]
+
+# perform query, fetch results to df, then pivot!
+chart_query = f"""
+SELECT team_name, games_played, {metric}
+FROM snapshot.{table_name}
+WHERE season_name = {metric_year}
+AND team_name IN ('{first_team}', '{second_team}')
 """
 
-compare_values = [x[0] for x in con.execute(distinct_teams_query).fetchall()]
+chart_df = con.execute(chart_query).df()
+pivot_df = chart_df.pivot(index="games_played", columns="team_name", values=metric)
 
-x_value = st.selectbox("Which value do you want to compare?", compare_values)
-
-chart_table_query = f"""
-SELECT {x_value}, points_per_game, conference, team_name
-FROM purty.aggregate_stats_with_points
-"""
-
-chart_table_df = con.execute(chart_table_query).df()
-
-query = f"""
-SELECT MIN({x_value}) * 0.9, MAX({x_value}) * 1.1
-FROM purty.aggregate_stats_with_points
-"""
-
-x_lower_bound, x_upper_boud = con.execute(query).fetchone()
-
-
-chart = (
-    alt.Chart(chart_table_df)
-    .mark_circle()
-    .encode(
-        x=alt.X(x_value, scale=alt.Scale(domain=(x_lower_bound, x_upper_boud))),
-        y="points_per_game",
-        color="conference",
-    )
-    .interactive()
-)
-
-st.altair_chart(chart, theme="streamlit", use_container_width=True)
+st.title(chart_title)
+st.line_chart(pivot_df)
