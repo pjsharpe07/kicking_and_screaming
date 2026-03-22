@@ -1,5 +1,12 @@
 # 1. instantiate venv and install any changed dependencies
 echo "Creating our virtual environment" &&
+
+if ! [ -d ".venv" ]; then
+  echo "need to build .venv" &&
+  python -m venv ".venv"
+fi
+
+
 source .venv/Scripts/activate &&
 echo "Installing dependencies" &&
 python -m pip install --upgrade pip &&

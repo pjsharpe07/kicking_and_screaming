@@ -47,6 +47,16 @@ game_data_present = check_for_existing_data(
 )
 
 game_data = asa_client.get_games(leagues="mls", seasons=season_name)
+
+# these are nonsense columns that they are providing
+try:
+    columns_to_drop = ["home_penalties", "away_penalties"]
+    game_data.drop(columns=columns_to_drop, inplace=True)
+except:
+    print(
+        f"[games_etl] Unable to drop {', '.join(columns_to_drop)} columns. Maybe they don't exist anymore?"
+    )
+
 game_data = validate_source_and_db_columns(
     source_df=game_data, target_table="games", cursor=cursor
 )
